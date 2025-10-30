@@ -6,15 +6,15 @@ export function CategoryChart() {
 
   if (!expenseBreakdown) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-slate-200 rounded w-1/3 mb-4"></div>
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-4"></div>
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-slate-200 rounded"></div>
-                <div className="flex-1 h-4 bg-slate-200 rounded"></div>
-                <div className="w-16 h-4 bg-slate-200 rounded"></div>
+                <div className="w-4 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="flex-1 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="w-16 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
               </div>
             ))}
           </div>
