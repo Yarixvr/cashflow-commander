@@ -78,8 +78,8 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
                 onClick={() => setType("expense")}
                 className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
                   type === "expense"
-                    ? "bg-red-100 text-red-700 border-2 border-red-200"
-                    : "bg-slate-100 text-slate-600 border-2 border-transparent"
+                    ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-2 border-red-200 dark:border-red-700"
+                    : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
                 }`}
               >
                 📉 Expense
@@ -89,8 +89,8 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
                 onClick={() => setType("income")}
                 className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
                   type === "income"
-                    ? "bg-green-100 text-green-700 border-2 border-green-200"
-                    : "bg-slate-100 text-slate-600 border-2 border-transparent"
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-2 border-green-200 dark:border-green-700"
+                    : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
                 }`}
               >
                 📈 Income
