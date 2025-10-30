@@ -61,29 +61,29 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-        <div className="p-6 border-b border-slate-200">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-800">Add Account</h2>
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Add Account</h2>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 text-2xl"
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
             >
               ×
             </button>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Account Name */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Account Name</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Account Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
               placeholder="My Checking Account"
               required
             />
@@ -91,7 +91,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Account Type */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Account Type</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Account Type</label>
             <div className="grid grid-cols-2 gap-2">
               {accountTypes.map((accountType) => (
                 <button
@@ -100,8 +100,8 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
                   onClick={() => setType(accountType.value as any)}
                   className={`p-3 rounded-lg border-2 transition-colors ${
                     type === accountType.value
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-slate-200 hover:border-slate-300"
+                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                      : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 dark:text-slate-300"
                   }`}
                 >
                   <div className="text-lg mb-1">{accountType.icon}</div>
@@ -113,11 +113,11 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Currency */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Currency</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Currency</label>
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
             >
               <option value="USD">USD - US Dollar</option>
               <option value="EUR">EUR - Euro</option>
@@ -128,13 +128,13 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Initial Balance */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Initial Balance</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Initial Balance</label>
             <input
               type="number"
               step="0.01"
               value={balance}
               onChange={(e) => setBalance(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
               placeholder="0.00"
               required
             />
@@ -142,7 +142,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Color */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Color</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Color</label>
             <div className="flex space-x-2">
               {colors.map((colorOption) => (
                 <button
@@ -150,7 +150,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
                   type="button"
                   onClick={() => setColor(colorOption)}
                   className={`w-8 h-8 rounded-full border-2 ${
-                    color === colorOption ? "border-slate-400" : "border-slate-200"
+                    color === colorOption ? "border-slate-400 dark:border-slate-300" : "border-slate-200 dark:border-slate-600"
                   }`}
                   style={{ backgroundColor: colorOption }}
                 />
@@ -163,13 +163,13 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 px-4 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+              className="flex-1 py-2 px-4 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex-1 py-2 px-4 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               Create Account
             </button>
