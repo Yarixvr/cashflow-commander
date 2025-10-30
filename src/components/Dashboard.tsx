@@ -26,7 +26,7 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-1">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-1">
         <nav className="flex space-x-1">
           {tabs.map((tab) => (
             <button
@@ -34,8 +34,8 @@ export function Dashboard() {
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
                 activeTab === tab.id
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-slate-600 hover:text-slate-800 hover:bg-slate-50"
+                  ? "bg-blue-600 dark:bg-blue-500 text-white shadow-sm"
+                  : "text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
               <span>{tab.icon}</span>
