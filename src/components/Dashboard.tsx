@@ -71,7 +71,7 @@ export function Dashboard() {
       {activeTab === "transactions" && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-slate-800">Transactions</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Transactions</h2>
             <QuickActions compact={true} />
           </div>
           <TransactionList />
@@ -81,7 +81,7 @@ export function Dashboard() {
       {activeTab === "budgets" && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-slate-800">Budget Management</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Budget Management</h2>
           </div>
           <BudgetOverview budgets={budgets || []} detailed={true} />
         </div>
@@ -90,7 +90,7 @@ export function Dashboard() {
       {activeTab === "insights" && (
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold text-slate-800">Smart Insights</h2>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Smart Insights</h2>
           </div>
           <InsightCards insights={insights || []} detailed={true} />
         </div>
