@@ -15,18 +15,18 @@ interface BudgetOverviewProps {
 
 export function BudgetOverview({ budgets, detailed = false }: BudgetOverviewProps) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-800">Budget Overview</h3>
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Budget Overview</h3>
       </div>
       <div className="p-6">
         {budgets.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🎯</span>
             </div>
-            <p className="text-slate-600">No budgets set</p>
-            <p className="text-sm text-slate-500">Create budgets to track your spending</p>
+            <p className="text-slate-600 dark:text-slate-300">No budgets set</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Create budgets to track your spending</p>
           </div>
         ) : (
           <div className="space-y-4">
