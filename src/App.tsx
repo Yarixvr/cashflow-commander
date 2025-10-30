@@ -10,7 +10,7 @@ import { ThemeToggle } from "./components/ThemeToggle";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800">
       <Authenticated>
         <AppContent />
       </Authenticated>
