@@ -49,7 +49,7 @@ export function StatsCards({ totalBalance, monthlyStats, accounts }: StatsCardsP
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 hover:shadow-md transition-shadow"
+          className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 hover:shadow-md transition-shadow"
         >
           <div className="flex items-center justify-between mb-4">
             <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center text-white text-xl`}>
@@ -57,8 +57,8 @@ export function StatsCards({ totalBalance, monthlyStats, accounts }: StatsCardsP
             </div>
           </div>
           <div>
-            <p className="text-sm font-medium text-slate-600 mb-1">{stat.title}</p>
-            <p className="text-2xl font-bold text-slate-800">
+            <p className="text-sm font-medium text-slate-600 dark:text-slate-300 mb-1">{stat.title}</p>
+            <p className="text-2xl font-bold text-slate-800 dark:text-slate-100">
               ${Math.abs(stat.value).toLocaleString('en-US', { minimumFractionDigits: 2 })}
               {stat.value < 0 && <span className="text-red-500 ml-1">-</span>}
             </p>
