@@ -34,29 +34,29 @@ export function BudgetOverview({ budgets, detailed = false }: BudgetOverviewProp
               <div key={budget._id} className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium text-slate-800">{budget.category}</p>
-                    <p className="text-sm text-slate-500 capitalize">{budget.period} budget</p>
+                    <p className="font-medium text-slate-800 dark:text-slate-100">{budget.category}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 capitalize">{budget.period} budget</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-slate-800">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100">
                       ${budget.spent.toFixed(2)} / ${budget.amount.toFixed(2)}
                     </p>
-                    <p className={`text-sm ${budget.remaining >= 0 ? "text-green-600" : "text-red-600"}`}>
+                    <p className={`text-sm ${budget.remaining >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
                       ${Math.abs(budget.remaining).toFixed(2)} {budget.remaining >= 0 ? "remaining" : "over"}
                     </p>
                   </div>
                 </div>
-                <div className="w-full bg-slate-200 rounded-full h-2">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all ${
-                      budget.percentage > 100 ? "bg-red-500" : 
+                      budget.percentage > 100 ? "bg-red-500" :
                       budget.percentage > 80 ? "bg-orange-500" : "bg-green-500"
                     }`}
                     style={{ width: `${Math.min(budget.percentage, 100)}%` }}
                   ></div>
                 </div>
                 {detailed && (
-                  <div className="text-xs text-slate-500">
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
                     {budget.percentage.toFixed(1)}% of budget used
                   </div>
                 )}
