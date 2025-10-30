@@ -56,9 +56,9 @@ export function QuickActions({ compact = false }: QuickActionsProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-800">Quick Actions</h3>
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Quick Actions</h3>
       </div>
       <div className="p-6 space-y-3">
         {actions.map((action, index) => (
