@@ -54,24 +54,24 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b border-slate-200">
+    <div className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 flex items-center justify-center p-4 z-50">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-800">Add Transaction</h2>
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Add Transaction</h2>
             <button
               onClick={onClose}
-              className="text-slate-400 hover:text-slate-600 text-2xl"
+              className="text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
             >
               ×
             </button>
           </div>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Type Selection */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-2">Type</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Type</label>
             <div className="flex space-x-2">
               <button
                 type="button"
