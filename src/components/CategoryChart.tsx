@@ -6,15 +6,15 @@ export function CategoryChart() {
 
   if (!expenseBreakdown) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
         <div className="animate-pulse">
-          <div className="h-6 bg-slate-200 rounded w-1/3 mb-4"></div>
+          <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3 mb-4"></div>
           <div className="space-y-3">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="flex items-center space-x-3">
-                <div className="w-4 h-4 bg-slate-200 rounded"></div>
-                <div className="flex-1 h-4 bg-slate-200 rounded"></div>
-                <div className="w-16 h-4 bg-slate-200 rounded"></div>
+                <div className="w-4 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="flex-1 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
+                <div className="w-16 h-4 bg-slate-200 dark:bg-slate-700 rounded"></div>
               </div>
             ))}
           </div>
@@ -30,19 +30,19 @@ export function CategoryChart() {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-      <div className="p-6 border-b border-slate-200">
-        <h3 className="text-lg font-semibold text-slate-800">Spending by Category</h3>
-        <p className="text-sm text-slate-500">Last 30 days</p>
+    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Spending by Category</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Last 30 days</p>
       </div>
       <div className="p-6">
         {expenseBreakdown.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">📊</span>
             </div>
-            <p className="text-slate-600">No expenses to show</p>
-            <p className="text-sm text-slate-500">Add some transactions to see your spending breakdown</p>
+            <p className="text-slate-600 dark:text-slate-300">No expenses to show</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Add some transactions to see your spending breakdown</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -52,21 +52,21 @@ export function CategoryChart() {
                 <div key={item.category} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-3">
-                      <div 
+                      <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: colors[index % colors.length] }}
                       ></div>
-                      <span className="font-medium text-slate-700">{item.category}</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-200">{item.category}</span>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-slate-800">${item.amount.toFixed(2)}</p>
-                      <p className="text-xs text-slate-500">{percentage.toFixed(1)}%</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">${item.amount.toFixed(2)}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{percentage.toFixed(1)}%</p>
                     </div>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div
                       className="h-2 rounded-full transition-all"
-                      style={{ 
+                      style={{
                         width: `${percentage}%`,
                         backgroundColor: colors[index % colors.length]
                       }}
