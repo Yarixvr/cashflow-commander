@@ -69,24 +69,24 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
               <div
                 key={insight._id}
                 className={`p-4 rounded-lg border transition-all ${
-                  insight.isRead 
-                    ? "bg-slate-50 border-slate-200" 
-                    : "bg-blue-50 border-blue-200"
+                  insight.isRead
+                    ? "bg-slate-50 dark:bg-slate-700/50 border-slate-200 dark:border-slate-600"
+                    : "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700"
                 }`}
               >
                 <div className="flex items-start space-x-3">
                   <div className="text-2xl">{getInsightIcon(insight.type)}</div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-slate-800 mb-1">{insight.title}</h4>
-                    <p className="text-sm text-slate-600 mb-2">{insight.description}</p>
+                    <h4 className="font-semibold text-slate-800 dark:text-slate-100 mb-1">{insight.title}</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mb-2">{insight.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs text-slate-500">
+                      <span className="text-xs text-slate-500 dark:text-slate-400">
                         {new Date(insight.createdAt).toLocaleDateString()}
                       </span>
                       {!insight.isRead && (
                         <button
                           onClick={() => handleMarkAsRead(insight._id)}
-                          className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                          className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
                         >
                           Mark as read
                         </button>
