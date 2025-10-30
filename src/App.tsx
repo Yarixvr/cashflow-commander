@@ -31,7 +31,7 @@ function AppContent() {
 
   return (
     <div className="min-h-screen">
-      <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
@@ -39,11 +39,14 @@ function AppContent() {
                 <span className="text-white font-bold text-sm">CF</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">CashFlow Commander</h1>
-                <p className="text-xs text-slate-500 hidden sm:block">Master your money. Rule your flow.</p>
+                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">CashFlow Commander</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Master your money. Rule your flow.</p>
               </div>
             </div>
-            <SignOutButton />
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
+              <SignOutButton />
+            </div>
           </div>
         </div>
       </header>
