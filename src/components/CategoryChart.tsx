@@ -52,21 +52,21 @@ export function CategoryChart() {
                 <div key={item.category} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center space-x-3">
-                      <div 
+                      <div
                         className="w-4 h-4 rounded-full"
                         style={{ backgroundColor: colors[index % colors.length] }}
                       ></div>
-                      <span className="font-medium text-slate-700">{item.category}</span>
+                      <span className="font-medium text-slate-700 dark:text-slate-200">{item.category}</span>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-slate-800">${item.amount.toFixed(2)}</p>
-                      <p className="text-xs text-slate-500">{percentage.toFixed(1)}%</p>
+                      <p className="font-semibold text-slate-800 dark:text-slate-100">${item.amount.toFixed(2)}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{percentage.toFixed(1)}%</p>
                     </div>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                     <div
                       className="h-2 rounded-full transition-all"
-                      style={{ 
+                      style={{
                         width: `${percentage}%`,
                         backgroundColor: colors[index % colors.length]
                       }}
