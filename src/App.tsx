@@ -7,6 +7,7 @@ import { Dashboard } from "./components/Dashboard";
 import { useEffect } from "react";
 import { useMutation } from "convex/react";
 import { ThemeToggle } from "./components/ThemeToggle";
+import { ThemeSelector } from "./components/ThemeSelector";
 
 export default function App() {
   return (
