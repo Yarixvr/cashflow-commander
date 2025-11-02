@@ -137,8 +137,8 @@ export function ThemeSelector() {
                     setTheme(themeOption.id);
                     setIsOpen(false);
                   }}
-                  className={`w-full p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all-fast ${
-                    theme === themeOption.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
+                  className={`w-full p-4 flex items-start space-x-3 hover:bg-slate-50 dark:hover:bg-slate-700 oled:hover:bg-gray-900 cyber:hover:bg-purple-900 transition-all-fast theme-option ${
+                    theme === themeOption.id ? 'bg-blue-50 dark:bg-blue-900/20 oled:bg-blue-900/30 cyber:bg-pink-900/30' : ''
                   }`}
                 >
                   <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${themeOption.gradient} flex items-center justify-center text-white flex-shrink-0`}>
