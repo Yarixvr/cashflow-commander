@@ -40,8 +40,8 @@ function AppContent() {
                 <span className="text-white font-bold text-sm">CF</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100">CashFlow Commander</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Master your money. Rule your flow.</p>
+                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 transition-all-fast">CashFlow Commander</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-300 hidden sm:block transition-all-fast">Master your money. Rule your flow.</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
