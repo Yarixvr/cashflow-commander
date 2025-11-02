@@ -121,8 +121,8 @@ body {
 /* Subtle desktop animations */
 @media (min-width: 769px) {
   .desktop-glow:hover {
-    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
-    transition: filter 300ms ease-in-out;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    transition: box-shadow 300ms ease-in-out;
   }
 
   .desktop-scale:hover {
