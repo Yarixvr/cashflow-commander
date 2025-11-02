@@ -104,7 +104,7 @@ export function ThemeSelector() {
           {themes.find(t => t.id === theme)?.name}
         </span>
         <svg
-          className={`w-4 h-4 text-slate-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
