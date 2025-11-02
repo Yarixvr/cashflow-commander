@@ -100,7 +100,7 @@ export function ThemeSelector() {
         <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${themes.find(t => t.id === theme)?.gradient || 'from-blue-500 to-blue-600'} flex items-center justify-center text-white`}>
           {themes.find(t => t.id === theme)?.icon}
         </div>
-        <span className="text-sm font-medium text-slate-700 dark:text-slate-300 hidden sm:inline">
+        <span className="text-sm font-medium text-slate-700 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-300 hidden sm:inline">
           {themes.find(t => t.id === theme)?.name}
         </span>
         <svg
