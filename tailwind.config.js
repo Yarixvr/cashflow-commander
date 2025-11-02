@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: 'class',
+  darkMode: ['light', 'dark', 'oled', 'cyber', 'auto'],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -13,6 +13,24 @@ export default {
           hover: '#1d4ed8',
         },
         secondary: '#64748b',
+        // OLED theme colors - pure black for OLED displays
+        oled: {
+          bg: '#000000',
+          card: '#0a0a0a',
+          border: '#1a1a1a',
+          text: '#ffffff',
+          muted: '#a0a0a0',
+        },
+        // Cyber theme colors - purple/pink aesthetic
+        cyber: {
+          bg: '#0f0a1f',
+          card: '#1a0f2e',
+          border: '#2d1b69',
+          text: '#f8f0ff',
+          accent: '#ff00ff',
+          accent2: '#00ffff',
+          muted: '#b794f6',
+        },
       },
       spacing: {
         'section': '2rem',
@@ -23,6 +41,12 @@ export default {
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.3s ease-out',
+        'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+        'float': 'float 3s ease-in-out infinite',
+        'slide-in': 'slideIn 0.2s ease-out',
+        'scale-in': 'scaleIn 0.2s ease-out',
+        'rotate-slow': 'rotateSlow 20s linear infinite',
+        'glow': 'glow 2s ease-in-out infinite alternate',
       },
       keyframes: {
         fadeIn: {
@@ -33,6 +57,29 @@ export default {
           '0%': { transform: 'translateY(10px)', opacity: '0' },
           '100%': { transform: 'translateY(0)', opacity: '1' },
         },
+        pulseGlow: {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        slideIn: {
+          '0%': { opacity: '0', transform: 'translateX(-20px)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        scaleIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        rotateSlow: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        glow: {
+          '0%': { filter: 'drop-shadow(0 0 5px rgba(147, 51, 234, 0.5))' },
+          '100%': { filter: 'drop-shadow(0 0 20px rgba(147, 51, 234, 0.8))' },
       },
     },
   },
