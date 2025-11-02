@@ -67,11 +67,11 @@ function LandingPage() {
           <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <span className="text-white font-bold text-2xl">CF</span>
           </div>
-          <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100 mb-2">CashFlow Commander</h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 mb-1">Master your money. Rule your flow.</p>
-          <p className="text-sm text-slate-500 dark:text-slate-400">Take control of your finances with intelligent insights and beautiful visualizations.</p>
+          <h1 className="text-4xl font-bold text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 mb-2 transition-all-fast">CashFlow Commander</h1>
+          <p className="text-lg text-slate-600 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-300 mb-1 transition-all-fast">Master your money. Rule your flow.</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400 transition-all-fast">Take control of your finances with intelligent insights and beautiful visualizations.</p>
         </div>
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-700">
+        <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 rounded-2xl shadow-xl p-8 border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 transition-all-fast">
           <SignInForm />
         </div>
       </div>
