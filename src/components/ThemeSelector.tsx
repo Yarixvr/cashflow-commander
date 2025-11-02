@@ -1,5 +1,6 @@
 import { useTheme } from '../hooks/useTheme';
 import { useState } from 'react';
+import { ThemeStats } from './ThemeStats';
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
