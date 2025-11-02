@@ -169,11 +169,7 @@ export function ThemeSelector() {
               ))}
             </div>
 
-            {/* Theme stats section */}
-            <div className="p-4 border-t border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800">
-              <ThemeStats />
-            </div>
-
+  
             <div className="p-4 border-t border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800">
               <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400">
                 <span>Theme changes are saved automatically</span>
