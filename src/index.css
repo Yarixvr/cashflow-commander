@@ -52,46 +52,46 @@ body {
 
 /* Light Theme */
 .light {
-  --bg-primary: theme('colors.white');
-  --bg-secondary: theme('colors.slate.50');
-  --text-primary: theme('colors.slate.900');
-  --text-secondary: theme('colors.slate.600');
-  --text-muted: theme('colors.slate.500');
-  --border-primary: theme('colors.slate.200');
-  --border-secondary: theme('colors.slate.300');
+  --bg-primary: white;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
 }
 
 /* Dark Theme */
 .dark {
-  --bg-primary: theme('colors.slate.800');
-  --bg-secondary: theme('colors.slate.900');
-  --text-primary: theme('colors.slate.100');
-  --text-secondary: theme('colors.slate.300');
-  --text-muted: theme('colors.slate.400');
-  --border-primary: theme('colors.slate.700');
-  --border-secondary: theme('colors.slate.600');
+  --bg-primary: #1e293b;
+  --bg-secondary: #0f172a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-primary: #374151;
+  --border-secondary: #4b5563;
 }
 
 /* OLED Theme - Pure Black */
 .oled {
-  --bg-primary: theme('colors.oled.bg');
-  --bg-secondary: theme('colors.oled.card');
-  --text-primary: theme('colors.oled.text');
-  --text-secondary: theme('colors.oled.muted');
-  --text-muted: theme('colors.oled.muted');
-  --border-primary: theme('colors.oled.border');
-  --border-secondary: theme('colors.oled.border');
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #a0a0a0;
+  --border-primary: #1a1a1a;
+  --border-secondary: #1a1a1a;
 }
 
 /* Cyber Theme - Purple/Pink Aesthetic */
 .cyber {
-  --bg-primary: theme('colors.cyber.bg');
-  --bg-secondary: theme('colors.cyber.card');
-  --text-primary: theme('colors.cyber.text');
-  --text-secondary: theme('colors.cyber.muted');
-  --text-muted: theme('colors.cyber.muted');
-  --border-primary: theme('colors.cyber.border');
-  --border-secondary: theme('colors.cyber.border');
+  --bg-primary: #0f0a1f;
+  --bg-secondary: #1a0f2e;
+  --text-primary: #f8f0ff;
+  --text-secondary: #b794f6;
+  --text-muted: #b794f6;
+  --border-primary: #2d1b69;
+  --border-secondary: #2d1b69;
 }
 
 /* Auto Theme */
