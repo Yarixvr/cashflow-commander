@@ -26,16 +26,16 @@ export function Dashboard() {
   return (
     <div className="space-y-6">
       {/* Navigation Tabs */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-1">
+      <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 p-1 transition-all-fast">
         <nav className="flex space-x-1">
           {tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all-fast hover:scale-105 active:scale-95 ${
                 activeTab === tab.id
-                  ? "bg-blue-600 dark:bg-blue-500 text-white shadow-sm"
-                  : "text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700"
+                  ? "bg-blue-600 dark:bg-blue-500 oled:bg-blue-600 cyber:bg-pink-500 text-white shadow-sm animate-pulse-glow"
+                  : "text-slate-600 dark:text-slate-300 oled:text-gray-400 cyber:text-purple-400 hover:text-slate-800 dark:hover:text-slate-100 oled:hover:text-white cyber:hover:text-purple-200 hover:bg-slate-50 dark:hover:bg-slate-700 oled:hover:bg-gray-900 cyber:hover:bg-purple-900"
               }`}
             >
               <span>{tab.icon}</span>
