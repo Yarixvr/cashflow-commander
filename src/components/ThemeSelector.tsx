@@ -119,12 +119,12 @@ export function ThemeSelector() {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute right-0 top-12 w-80 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-20 animate-scale-in">
-            <div className="p-4 border-b border-slate-200 dark:border-slate-700">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <div className="absolute right-0 top-12 w-96 bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 overflow-hidden z-20 animate-scale-in">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800">
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 oled:text-white cyber:text-purple-100">
                 Choose Theme
               </h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+              <p className="text-sm text-slate-600 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400 mt-1">
                 Select your preferred color scheme
               </p>
             </div>
