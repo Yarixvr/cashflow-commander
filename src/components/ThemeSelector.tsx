@@ -146,7 +146,7 @@ export function ThemeSelector() {
                   </div>
                   <div className="flex-1 text-left">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-slate-900 dark:text-slate-100">
+                      <h4 className="font-medium text-slate-900 dark:text-slate-100 oled:text-white cyber:text-purple-100">
                         {themeOption.name}
                       </h4>
                       {theme === themeOption.id && (
