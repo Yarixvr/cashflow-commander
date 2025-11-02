@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'oled' | 'cyber' | 'auto';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -10,29 +10,43 @@ export function useTheme() {
       return stored;
     }
 
-    // Check system preference
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark';
-    }
-
-    return 'light';
+    // Default to dark theme for new users
+    return 'dark';
   });
 
   useEffect(() => {
     const root = document.documentElement;
 
-    if (theme === 'dark') {
-      root.classList.add('dark');
+    // Remove all theme classes
+    root.classList.remove('light', 'dark', 'oled', 'cyber', 'auto');
+
+    // Add the appropriate theme class
+    if (theme === 'auto') {
+      // Check system preference for auto mode
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        root.classList.add('dark');
+      } else {
+        root.classList.add('light');
+      }
     } else {
-      root.classList.remove('dark');
+      root.classList.add(theme);
     }
   }, [theme]);
 
   const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
+    // Cycle through themes: dark -> light -> oled -> cyber -> auto -> dark
+    const themeOrder: Theme[] = ['dark', 'light', 'oled', 'cyber', 'auto'];
+    const currentIndex = themeOrder.indexOf(theme);
+    const newTheme = themeOrder[(currentIndex + 1) % themeOrder.length];
+
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
 
-  return { theme, toggleTheme };
+  const setThemeDirect = (newTheme: Theme) => {
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+  };
+
+  return { theme, toggleTheme, setTheme: setThemeDirect };
 }
