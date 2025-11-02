@@ -94,7 +94,7 @@ export function ThemeSelector() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-all-fast"
+        className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 shadow-sm hover:shadow-md transition-all-fast btn-animated"
         aria-label="Open theme selector"
       >
         <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${themes.find(t => t.id === theme)?.gradient || 'from-blue-500 to-blue-600'} flex items-center justify-center text-white`}>
