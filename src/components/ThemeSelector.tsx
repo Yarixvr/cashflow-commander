@@ -157,7 +157,7 @@ export function ThemeSelector() {
                         </div>
                       )}
                     </div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    <p className="text-sm text-slate-600 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400 mt-1">
                       {themeOption.description}
                     </p>
                     <div className={`mt-3 h-12 rounded-lg ${themeOption.preview.bg} ${themeOption.preview.border} border-2 flex items-center justify-center`}>
