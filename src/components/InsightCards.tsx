@@ -35,7 +35,6 @@ const INSIGHT_TYPE_MAP: Record<string, InsightType> = {
 
 interface InsightConfig {
   title: string;
-  defaultDescription: string;
   icon: string;
   badge: string;
   badgeClassName: string;
@@ -45,7 +44,6 @@ interface InsightConfig {
 const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   spending_pattern: {
     title: "Spending Pattern Insight",
-    defaultDescription: "You spent 42% more this week compared to last week.",
     icon: "📊",
     badge: "Stats",
     badgeClassName:
@@ -55,7 +53,6 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
   biggest_expense: {
     title: "Biggest Expense Insight",
-    defaultDescription: "Your largest expense this month is Food & Dining at 89 OMR.",
     icon: "🔍",
     badge: "Analysis",
     badgeClassName:
@@ -65,8 +62,6 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
   savings_opportunity: {
     title: "Savings Opportunity Insight",
-    defaultDescription:
-      "If you reduce your food spending by 15%, you can save an extra 20 OMR this month.",
     icon: "💡",
     badge: "Advice",
     badgeClassName:
@@ -76,7 +71,6 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
   category_breakdown: {
     title: "Category Breakdown Insight",
-    defaultDescription: "Transportation makes up 31% of your budget this week.",
     icon: "📊",
     badge: "Stats",
     badgeClassName:
@@ -86,7 +80,6 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
   trend_detection: {
     title: "Trend Detection Insight",
-    defaultDescription: "Your expenses are trending upward — be careful.",
     icon: "⚠️",
     badge: "Warning",
     badgeClassName:
@@ -96,8 +89,6 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
   recommendation: {
     title: "Recommendation Insight",
-    defaultDescription:
-      "Try setting a weekly spending limit to maintain consistency.",
     icon: "🧠",
     badge: "Smart tip",
     badgeClassName:
@@ -111,17 +102,18 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
 
-  type EnrichedInsight = Insight & {
-    normalizedType?: InsightType;
-    config?: InsightConfig;
-  };
-
   const handleMarkAsRead = async (insightId: string) => {
+    if (!insightId) return;
     await markAsRead({ id: insightId as any });
   };
 
   const handleGenerateInsights = async () => {
     await generateInsights();
+  };
+
+  type EnrichedInsight = Insight & {
+    normalizedType?: InsightType;
+    config?: InsightConfig;
   };
 
   const normalizeType = (type: string): InsightType | undefined => {
@@ -132,63 +124,23 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
     return INSIGHT_TYPE_MAP[type];
   };
 
-  const normalizedInsightsByType = insights.reduce<Record<InsightType, EnrichedInsight>>(
-    (acc, insight) => {
+  const normalizedInsights: EnrichedInsight[] = insights
+    .map((insight) => {
       const normalized = normalizeType(insight.type);
+      const config = normalized ? INSIGHT_CONFIG[normalized] : undefined;
 
-      if (!normalized) {
-        return acc;
-      }
-
-      const config = INSIGHT_CONFIG[normalized];
-
-      acc[normalized] = {
+      return {
         ...insight,
         normalizedType: normalized,
-        title: insight.title || config.title,
-        description: insight.description || config.defaultDescription,
         config,
+        title: insight.title || config?.title || "Insight",
       };
-
-      return acc;
-    },
-    {} as Record<InsightType, EnrichedInsight>
-  );
-
-  const baseInsights: EnrichedInsight[] = (Object.entries(INSIGHT_CONFIG) as [
-    InsightType,
-    InsightConfig
-  ][]).map(([type, config]) => {
-    const matching = normalizedInsightsByType[type];
-
-    if (matching) {
-      return matching;
-    }
-
-    return {
-      _id: type,
-      type,
-      normalizedType: type,
-      title: config.title,
-      description: config.defaultDescription,
-      data: null,
-      createdAt: Date.now(),
-      isRead: true,
-      config,
-    } as EnrichedInsight;
-  });
-
-  const additionalInsights: EnrichedInsight[] = insights
-    .filter((insight) => !normalizeType(insight.type))
-    .map((insight) => ({
-      ...insight,
-    }));
-
-  const combinedInsights: EnrichedInsight[] = [...baseInsights, ...additionalInsights];
+    })
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
   const insightsToDisplay = detailed
-    ? combinedInsights
-    : combinedInsights.slice(0, 6);
+    ? normalizedInsights
+    : normalizedInsights.slice(0, 6);
 
   return (
     <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 cyber:border-purple-800 navy:border-blue-900 coral:border-[#fda4af] mint:border-emerald-400 bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] cyber:bg-[#241047]/90 navy:bg-[#16213d] coral:bg-[#fff1f2] mint:bg-[#ecfdf5]">
@@ -202,68 +154,82 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
         </button>
       </div>
       <div className="p-6">
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {insightsToDisplay.map((insight) => {
-            const resolvedConfig =
-              insight.config ||
-              (insight.normalizedType
-                ? INSIGHT_CONFIG[insight.normalizedType]
-                : undefined);
+        {insightsToDisplay.length > 0 ? (
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {insightsToDisplay.map((insight) => {
+              const resolvedConfig =
+                insight.config ||
+                (insight.normalizedType
+                  ? INSIGHT_CONFIG[insight.normalizedType]
+                  : undefined);
 
-            const accentClassName = resolvedConfig?.accentClassName ??
-              "bg-slate-50 dark:bg-slate-700/50 oled:bg-gray-900 cyber:bg-[#2f155b]/70 navy:bg-[#1c2f57] coral:bg-[#ffe4e6] mint:bg-[#d1fae5]/70";
+              const accentClassName = resolvedConfig?.accentClassName ??
+                "bg-slate-50 dark:bg-slate-700/50 oled:bg-gray-900 cyber:bg-[#2f155b]/70 navy:bg-[#1c2f57] coral:bg-[#ffe4e6] mint:bg-[#d1fae5]/70";
 
-            const unreadHighlight = insight.isRead
-              ? ""
-              : "ring-2 ring-blue-400/60 dark:ring-blue-400/40";
+              const unreadHighlight = insight.isRead
+                ? ""
+                : "ring-2 ring-blue-400/60 dark:ring-blue-400/40";
 
-            return (
-              <div
-                key={insight._id}
-                className={`group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600 oled:border-gray-700 cyber:border-purple-700 navy:border-blue-800 coral:border-[#fda4af] mint:border-emerald-300 transition-all hover:-translate-y-1 hover:shadow-lg ${accentClassName} ${unreadHighlight}`}
-              >
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 dark:bg-black/10" />
-                <div className="relative flex h-full flex-col space-y-3 p-4">
-                  <div className="flex items-center gap-2">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-2xl shadow-inner dark:bg-black/30">
-                      {resolvedConfig?.icon ?? "ℹ️"}
+              return (
+                <div
+                  key={insight._id}
+                  className={`group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600 oled:border-gray-700 cyber:border-purple-700 navy:border-blue-800 coral:border-[#fda4af] mint:border-emerald-300 transition-all hover:-translate-y-1 hover:shadow-lg ${accentClassName} ${unreadHighlight}`}
+                >
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 dark:bg-black/10" />
+                  <div className="relative flex h-full flex-col space-y-3 p-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/80 text-2xl shadow-inner dark:bg-black/30">
+                        {resolvedConfig?.icon ?? "ℹ️"}
+                      </div>
+                      {resolvedConfig && (
+                        <span
+                          className={`rounded-full px-2 py-1 text-xs font-medium ${resolvedConfig.badgeClassName}`}
+                        >
+                          {resolvedConfig.badge}
+                        </span>
+                      )}
                     </div>
-                    {resolvedConfig && (
-                      <span
-                        className={`rounded-full px-2 py-1 text-xs font-medium ${resolvedConfig.badgeClassName}`}
-                      >
-                        {resolvedConfig.badge}
+                    <div className="space-y-2">
+                      <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">
+                        {insight.title}
+                      </h4>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700">
+                        {insight.description}
+                      </p>
+                    </div>
+                    <div className="mt-auto flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 oled:text-gray-500 cyber:text-purple-300 navy:text-blue-300 coral:text-[#fb7185] mint:text-emerald-600">
+                      <span>
+                        {insight.createdAt
+                          ? new Date(insight.createdAt).toLocaleDateString()
+                          : ""}
                       </span>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-base font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">
-                      {insight.title}
-                    </h4>
-                    <p className="text-sm text-slate-600 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700">
-                      {insight.description}
-                    </p>
-                  </div>
-                  <div className="mt-auto flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 oled:text-gray-500 cyber:text-purple-300 navy:text-blue-300 coral:text-[#fb7185] mint:text-emerald-600">
-                    <span>
-                      {insight.createdAt
-                        ? new Date(insight.createdAt).toLocaleDateString()
-                        : ""}
-                    </span>
-                    {!insight.isRead && (
-                      <button
-                        onClick={() => handleMarkAsRead(insight._id)}
-                        className="font-medium text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 oled:text-blue-300 oled:hover:text-blue-200 cyber:text-pink-200 cyber:hover:text-pink-100 navy:text-blue-200 navy:hover:text-blue-100 coral:text-[#be123c] coral:hover:text-[#9f1239] mint:text-emerald-700 mint:hover:text-emerald-600"
-                      >
-                        Mark as read
-                      </button>
-                    )}
+                      {!insight.isRead && (
+                        <button
+                          onClick={() => handleMarkAsRead(insight._id)}
+                          className="font-medium text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 oled:text-blue-300 oled:hover:text-blue-200 cyber:text-pink-200 cyber:hover:text-pink-100 navy:text-blue-200 navy:hover:text-blue-100 coral:text-[#be123c] coral:hover:text-[#9f1239] mint:text-emerald-700 mint:hover:text-emerald-600"
+                        >
+                          Mark as read
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 py-12 text-center dark:border-slate-600 dark:bg-slate-900/40 oled:border-gray-700 oled:bg-gray-900/40 cyber:border-purple-700/60 cyber:bg-[#2f155b]/40 navy:border-blue-800 navy:bg-[#1c2f57]/40 coral:border-[#fda4af] coral:bg-[#ffe4e6] mint:border-emerald-300 mint:bg-[#d1fae5]/70">
+            <span className="text-3xl">🧠</span>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-slate-700 dark:text-slate-200 oled:text-gray-200 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-700">
+                No insights yet
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-600">
+                Refresh to generate insights from your latest transactions.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

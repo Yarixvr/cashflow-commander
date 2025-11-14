@@ -28,65 +28,154 @@ export const generateInsights = action({
     const transactions: Doc<"transactions">[] = await ctx.runQuery(internal.insights.getRecentTransactions, { userId });
     const insights: any[] = [];
 
-    // Spending trend analysis
-    const last30Days = transactions.filter((t: Doc<"transactions">) => 
-      t.date > Date.now() - 30 * 24 * 60 * 60 * 1000 && t.type === "expense"
-    );
-    const previous30Days = transactions.filter((t: Doc<"transactions">) => 
-      t.date > Date.now() - 60 * 24 * 60 * 60 * 1000 && 
-      t.date <= Date.now() - 30 * 24 * 60 * 60 * 1000 && 
-      t.type === "expense"
-    );
-
-    const currentSpending = last30Days.reduce((sum: number, t: Doc<"transactions">) => sum + t.amount, 0);
-    const previousSpending = previous30Days.reduce((sum: number, t: Doc<"transactions">) => sum + t.amount, 0);
-
-    if (previousSpending > 0) {
-      const change: number = ((currentSpending - previousSpending) / previousSpending) * 100;
-      if (Math.abs(change) > 10) {
-        insights.push({
-          type: "spending_trend",
-          title: change > 0 ? "Spending Increased" : "Spending Decreased",
-          description: `Your spending has ${change > 0 ? "increased" : "decreased"} by ${Math.abs(change).toFixed(1)}% compared to last month.`,
-          data: { change, currentSpending, previousSpending },
-        });
-      }
+    if (transactions.length === 0) {
+      return insights;
     }
 
-    // Top spending category
-    const categoryTotals = last30Days.reduce((acc: Record<string, number>, t: Doc<"transactions">) => {
-      acc[t.category] = (acc[t.category] || 0) + t.amount;
-      return acc;
-    }, {} as Record<string, number>);
+    const now = Date.now();
+    const dayMs = 24 * 60 * 60 * 1000;
+    const weekMs = dayMs * 7;
+    const monthMs = dayMs * 30;
 
-    const topCategory = Object.entries(categoryTotals)
-      .sort(([,a], [,b]) => (b as number) - (a as number))[0];
+    const expenses = transactions.filter((t) => t.type === "expense");
+    const incomes = transactions.filter((t) => t.type === "income");
 
-    if (topCategory && topCategory[1] > 0) {
-      const percentage = (topCategory[1] / currentSpending) * 100;
+    const within = (period: number) => (t: Doc<"transactions">) => t.date >= now - period;
+
+    const formatAmount = (amount: number) =>
+      `$${amount.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+    const lastWeekExpenses = expenses.filter(within(weekMs));
+    const previousWeekExpenses = expenses.filter(
+      (t) => t.date >= now - weekMs * 2 && t.date < now - weekMs
+    );
+
+    const lastWeekTotal = lastWeekExpenses.reduce((sum, t) => sum + t.amount, 0);
+    const previousWeekTotal = previousWeekExpenses.reduce((sum, t) => sum + t.amount, 0);
+
+    if (lastWeekTotal > 0 || previousWeekTotal > 0) {
+      const difference = lastWeekTotal - previousWeekTotal;
+      const change = previousWeekTotal > 0 ? (difference / previousWeekTotal) * 100 : undefined;
+
+      const description =
+        change !== undefined
+          ? `You spent ${Math.abs(change).toFixed(1)}% ${change > 0 ? "more" : "less"} than the previous week (${formatAmount(lastWeekTotal)} vs ${formatAmount(previousWeekTotal)}).`
+          : `Your spending last week totalled ${formatAmount(lastWeekTotal)}.`;
+
       insights.push({
-        type: "top_category",
-        title: "Top Spending Category",
-        description: `${topCategory[0]} accounts for ${percentage.toFixed(1)}% of your spending this month ($${topCategory[1].toFixed(2)}).`,
-        data: { category: topCategory[0], amount: topCategory[1], percentage },
+        type: "spending_trend",
+        title: "Weekly Spending Pattern",
+        description,
+        data: {
+          lastWeekTotal,
+          previousWeekTotal,
+          change,
+        },
       });
     }
 
-    // Savings opportunity
-    const income = transactions
-      .filter((t: Doc<"transactions">) => t.type === "income" && t.date > Date.now() - 30 * 24 * 60 * 60 * 1000)
-      .reduce((sum: number, t: Doc<"transactions">) => sum + t.amount, 0);
+    const lastMonthExpenses = expenses.filter(within(monthMs));
+    const lastMonthTotal = lastMonthExpenses.reduce((sum, t) => sum + t.amount, 0);
 
-    if (income > 0 && currentSpending > 0) {
-      const savingsRate = ((income - currentSpending) / income) * 100;
+    if (lastMonthExpenses.length > 0) {
+      const topTransaction = lastMonthExpenses.reduce((max, t) => (t.amount > max.amount ? t : max), lastMonthExpenses[0]);
+
+      insights.push({
+        type: "top_category",
+        title: "Biggest Expense",
+        description: `Your largest expense in the last 30 days was ${formatAmount(topTransaction.amount)} for ${topTransaction.category}${topTransaction.description ? ` (${topTransaction.description})` : ""}.`,
+        data: {
+          transactionId: topTransaction._id,
+          category: topTransaction.category,
+          amount: topTransaction.amount,
+          description: topTransaction.description,
+        },
+      });
+
+      const categoryTotals = lastMonthExpenses.reduce((acc: Record<string, { amount: number; count: number }>, t) => {
+        const entry = acc[t.category] || { amount: 0, count: 0 };
+        entry.amount += t.amount;
+        entry.count += 1;
+        acc[t.category] = entry;
+        return acc;
+      }, {} as Record<string, { amount: number; count: number }>);
+
+      const sortedCategories = Object.entries(categoryTotals).sort(([, a], [, b]) => b.amount - a.amount);
+      const [topCategory, topStats] = sortedCategories[0];
+      const topShare = lastMonthTotal > 0 ? (topStats.amount / lastMonthTotal) * 100 : 0;
+
+      insights.push({
+        type: "category_breakdown",
+        title: "Category Breakdown",
+        description: `${topCategory} represents ${topShare.toFixed(1)}% of your spending this month across ${topStats.count} transaction${topStats.count > 1 ? "s" : ""}.`,
+        data: {
+          topCategory,
+          amount: topStats.amount,
+          count: topStats.count,
+          percentage: topShare,
+          totals: categoryTotals,
+        },
+      });
+
+      if (sortedCategories.length > 1) {
+        const [secondCategory, secondStats] = sortedCategories[1];
+        const difference = topStats.amount - secondStats.amount;
+        const differencePct = secondStats.amount > 0 ? (difference / secondStats.amount) * 100 : undefined;
+
+        insights.push({
+          type: "trend_detection",
+          title: "Spending Trend",
+          description:
+            differencePct !== undefined
+              ? `${topCategory} spending is ${differencePct.toFixed(1)}% higher than ${secondCategory} this month.`
+              : `${topCategory} spending is leading all other categories this month.`,
+          data: {
+            leader: topCategory,
+            runnerUp: secondCategory,
+            leaderAmount: topStats.amount,
+            runnerUpAmount: secondStats.amount,
+            differencePct,
+          },
+        });
+      }
+    }
+
+    const lastMonthIncome = incomes.filter(within(monthMs)).reduce((sum, t) => sum + t.amount, 0);
+
+    if (lastMonthIncome > 0 && lastMonthTotal > 0) {
+      const savingsRate = ((lastMonthIncome - lastMonthTotal) / lastMonthIncome) * 100;
       if (savingsRate < 20) {
+        const targetSavings = lastMonthIncome * 0.2;
+        const needed = Math.max(targetSavings - (lastMonthIncome - lastMonthTotal), 0);
+
         insights.push({
           type: "savings_opportunity",
           title: "Savings Opportunity",
-          description: `You're saving ${savingsRate.toFixed(1)}% of your income. Consider aiming for 20% to build a stronger financial foundation.`,
-          data: { savingsRate, income, expenses: currentSpending },
+          description: `Saving 20% of your income would mean setting aside ${formatAmount(targetSavings)}. You're currently short by ${formatAmount(needed)} this month.`,
+          data: {
+            savingsRate,
+            targetSavings,
+            additionalNeeded: needed,
+            income: lastMonthIncome,
+            expenses: lastMonthTotal,
+          },
         });
       }
+    }
+
+    if (lastWeekExpenses.length > 0) {
+      const averageTransaction =
+        lastWeekExpenses.reduce((sum, t) => sum + t.amount, 0) / lastWeekExpenses.length;
+
+      insights.push({
+        type: "recommendation",
+        title: "Personalized Tip",
+        description: `Try keeping individual purchases under ${formatAmount(averageTransaction)} to stay aligned with last week's average spend per transaction.`,
+        data: {
+          averageTransaction,
+          transactionCount: lastWeekExpenses.length,
+        },
+      });
     }
 
     // Save insights to database
