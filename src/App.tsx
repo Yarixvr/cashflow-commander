@@ -4,7 +4,7 @@ import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
 import { Toaster } from "sonner";
 import { Dashboard } from "./components/Dashboard";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation } from "convex/react";
 import { ThemeGallery } from "./components/ThemeGallery";
 import { useDeviceType } from "./hooks/useDeviceType";
@@ -25,12 +25,24 @@ export default function App() {
   );
 }
 
+type AppView = "dashboard" | "themes";
+
+const NAV_ITEMS: { id: AppView; label: string }[] = [
+  { id: "dashboard", label: "Dashboard" },
+  { id: "themes", label: "Themes" },
+];
+
 function AppContent() {
   const initializeCategories = useMutation(api.categories.initializeDefaults);
-  const [activeView, setActiveView] = useState<"dashboard" | "themes">("dashboard");
+  const [activeView, setActiveView] = useState<AppView>("dashboard");
+
+  const navigationItems = useMemo(() => NAV_ITEMS, []);
 
   useEffect(() => {
-    initializeCategories();
+    initializeCategories().catch(() => {
+      // The mutation is idempotent and safe to ignore failures here because
+      // the dashboard will gracefully handle missing defaults on retry.
+    });
   }, [initializeCategories]);
 
   useEffect(() => {
@@ -38,14 +50,23 @@ function AppContent() {
       return;
     }
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: motionQuery.matches ? "auto" : "smooth",
+      });
+    };
 
-    window.scrollTo({
-      top: 0,
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
+    scrollToTop();
+
+    motionQuery.addEventListener?.("change", scrollToTop);
+    motionQuery.addListener?.(scrollToTop);
+
+    return () => {
+      motionQuery.removeEventListener?.("change", scrollToTop);
+      motionQuery.removeListener?.(scrollToTop);
+    };
   }, [activeView]);
 
   return (
@@ -63,13 +84,10 @@ function AppContent() {
               </div>
             </div>
             <nav className="hidden md:flex items-center space-x-1 mr-6">
-              {[
-                { id: "dashboard", label: "Dashboard" },
-                { id: "themes", label: "Themes" },
-              ].map((item) => (
+              {navigationItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveView(item.id as "dashboard" | "themes")}
+                  onClick={() => setActiveView(item.id)}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all-fast auto-animate ${
                     activeView === item.id
                       ? "bg-blue-600 text-white shadow-md"

@@ -2,23 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
-
 :root {
+  --app-scroll-behavior: smooth;
   --color-light: #ffffff;
   --color-dark: #171717;
   --gradient-start: #f8fafc;
   --gradient-end: #e0f2fe;
   --bg-secondary: #f8fafc;
   --text-primary: #0f172a;
+}
+
+html {
+  scroll-behavior: var(--app-scroll-behavior);
 }
 
 /* Base transitions */
@@ -43,11 +38,11 @@ html {
 
   html,
   body {
-    scroll-behavior: smooth;
+    scroll-behavior: var(--app-scroll-behavior);
   }
 
   body.mobile-smooth-scroll {
-    scroll-behavior: smooth;
+    scroll-behavior: var(--app-scroll-behavior);
   }
 
   body.mobile-smooth-scroll main {
@@ -80,7 +75,7 @@ body {
     "Noto Color Emoji";
   color: var(--text-primary, #0f172a);
   background: var(--bg-secondary, #ffffff);
-  scroll-behavior: smooth;
+  scroll-behavior: var(--app-scroll-behavior);
 }
 
 .mobile-scroll-body,
@@ -89,19 +84,19 @@ body.mobile-smooth-scroll {
   overscroll-behavior-y: contain;
   scrollbar-gutter: stable both-edges;
   touch-action: pan-y;
+  scroll-behavior: var(--app-scroll-behavior);
 }
-
 @media (prefers-reduced-motion: reduce) {
-  body {
-    scroll-behavior: auto;
-  }
-
-  body.mobile-smooth-scroll {
-    scroll-behavior: auto;
+  :root {
+    --app-scroll-behavior: auto;
   }
 
   body.mobile-smooth-scroll main {
     scroll-snap-type: none;
+  }
+
+  body.mobile-smooth-scroll main > * {
+    scroll-snap-align: none;
   }
 }
 
