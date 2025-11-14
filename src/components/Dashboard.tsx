@@ -24,9 +24,9 @@ export function Dashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 auto-animate">
       {/* Navigation Tabs */}
-      <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 p-1 transition-all-fast">
+      <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 navy:bg-[#0f172a] coral:bg-white/90 mint:bg-emerald-900/10 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 navy:border-blue-900 coral:border-pink-200 mint:border-emerald-400 p-1 transition-all-fast auto-animate">
         <nav className="flex space-x-1">
           {tabs.map((tab) => (
             <button
@@ -47,19 +47,19 @@ export function Dashboard() {
 
       {/* Tab Content */}
       {activeTab === "overview" && (
-        <div className="space-y-6">
-          <StatsCards 
+        <div className="space-y-6 auto-animate">
+          <StatsCards
             totalBalance={totalBalance || 0}
             monthlyStats={monthlyStats}
             accounts={accounts || []}
           />
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-animate">
+            <div className="lg:col-span-2 space-y-6 auto-animate">
               <CategoryChart />
               <TransactionList limit={5} showHeader={true} />
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 auto-animate">
               <QuickActions />
               <BudgetOverview budgets={budgets || []} />
               <InsightCards insights={insights || []} />
@@ -69,7 +69,7 @@ export function Dashboard() {
       )}
 
       {activeTab === "transactions" && (
-        <div className="space-y-6">
+        <div className="space-y-6 auto-animate">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 transition-all-fast">Transactions</h2>
             <QuickActions compact={true} />
@@ -79,7 +79,7 @@ export function Dashboard() {
       )}
 
       {activeTab === "budgets" && (
-        <div className="space-y-6">
+        <div className="space-y-6 auto-animate">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 transition-all-fast">Budget Management</h2>
           </div>
@@ -88,7 +88,7 @@ export function Dashboard() {
       )}
 
       {activeTab === "insights" && (
-        <div className="space-y-6">
+        <div className="space-y-6 auto-animate">
           <div className="flex justify-between items-center">
             <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 transition-all-fast">Smart Insights</h2>
           </div>

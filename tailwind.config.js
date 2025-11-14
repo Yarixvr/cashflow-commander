@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  darkMode: ['light', 'dark', 'oled', 'cyber', 'auto'],
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -30,6 +30,27 @@ export default {
           accent: '#ff00ff',
           accent2: '#00ffff',
           muted: '#b794f6',
+        },
+        navy: {
+          bg: '#0f172a',
+          card: '#1e3a8a',
+          border: '#1d4ed8',
+          text: '#e0f2fe',
+          muted: '#93c5fd',
+        },
+        coral: {
+          bg: '#ffe4e6',
+          card: '#fb7185',
+          border: '#f97316',
+          text: '#7f1d1d',
+          muted: '#fb7185',
+        },
+        mint: {
+          bg: '#d1fae5',
+          card: '#34d399',
+          border: '#0d9488',
+          text: '#065f46',
+          muted: '#5eead4',
         },
       },
       spacing: {
@@ -80,8 +101,16 @@ export default {
         glow: {
           '0%': { filter: 'drop-shadow(0 0 5px rgba(147, 51, 234, 0.5))' },
           '100%': { filter: 'drop-shadow(0 0 20px rgba(147, 51, 234, 0.8))' },
+        },
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addVariant }) {
+      const themes = ['light', 'dark', 'oled', 'cyber', 'navy', 'coral', 'mint', 'auto'];
+      themes.forEach((theme) => {
+        addVariant(theme, `.${theme} &`);
+      });
+    },
+  ],
 }
