@@ -1,4 +1,10 @@
-import { query, mutation, action, internalQuery, internalMutation } from "./_generated/server";
+import {
+  query,
+  mutation,
+  action,
+  internalQuery,
+  internalMutation,
+} from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
@@ -302,5 +308,47 @@ export const markAsRead = mutation({
     }
 
     return await ctx.db.patch(args.id, { isRead: true });
+  },
+});
+
+export const removeDuplicates = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const insights = await ctx.db
+      .query("insights")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    const normalize = (value: string | undefined | null) =>
+      value?.trim().toLowerCase() ?? "";
+
+    const sortedByRecency = insights.sort(
+      (a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)
+    );
+
+    const seen = new Set<string>();
+    const duplicates: typeof insights[number]["_id"][] = [];
+
+    for (const insight of sortedByRecency) {
+      const key = `${insight.type}|${normalize(insight.title)}|${normalize(
+        insight.description
+      )}`;
+
+      if (seen.has(key)) {
+        duplicates.push(insight._id);
+        continue;
+      }
+
+      seen.add(key);
+    }
+
+    for (const duplicateId of duplicates) {
+      await ctx.db.delete(duplicateId);
+    }
+
+    return { removed: duplicates.length };
   },
 });
