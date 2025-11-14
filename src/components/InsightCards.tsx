@@ -102,7 +102,7 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
 export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
-  const clearInsights = useAction(api.insights.clearAll);
+  const clearInsights = useMutation(api.insights.clearAll);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
 

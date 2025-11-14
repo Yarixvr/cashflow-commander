@@ -1,10 +1,4 @@
-import {
-  query,
-  mutation,
-  action,
-  internalQuery,
-  internalMutation,
-} from "./_generated/server";
+import { query, mutation, action, internalQuery, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
@@ -208,15 +202,20 @@ export const generateInsights = action({
   },
 });
 
-export const clearAll = action({
+export const clearAll = mutation({
   args: {},
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
 
-    await ctx.runMutation(internal.insights.clearForUser, { userId });
+    const existing = await ctx.db
+      .query("insights")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
 
-    return { cleared: true };
+    for (const insight of existing) {
+      await ctx.db.delete(insight._id);
+    }
   },
 });
 
@@ -252,20 +251,6 @@ export const create = internalMutation({
       createdAt: Date.now(),
       isRead: false,
     });
-  },
-});
-
-export const clearForUser = internalMutation({
-  args: { userId: v.id("users") },
-  handler: async (ctx, args) => {
-    const existing = await ctx.db
-      .query("insights")
-      .withIndex("by_user", (q) => q.eq("userId", args.userId))
-      .collect();
-
-    for (const insight of existing) {
-      await ctx.db.delete(insight._id);
-    }
   },
 });
 
