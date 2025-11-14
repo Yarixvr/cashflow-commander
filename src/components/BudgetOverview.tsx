@@ -15,18 +15,18 @@ interface BudgetOverviewProps {
 
 export function BudgetOverview({ budgets, detailed = false }: BudgetOverviewProps) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
-      <div className="p-6 border-b border-slate-200 dark:border-slate-700">
-        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Budget Overview</h3>
+    <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 cyber:border-purple-800 navy:border-blue-900 coral:border-[#fda4af] mint:border-emerald-400 bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] cyber:bg-[#241047]/90 navy:bg-[#16213d] coral:bg-[#fff1f2] mint:bg-[#ecfdf5]">
+      <div className="p-6 border-b border-slate-200 dark:border-slate-700 oled:border-gray-800 cyber:border-purple-700 navy:border-blue-800 coral:border-[#fb7185] mint:border-emerald-300">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">Budget Overview</h3>
       </div>
       <div className="p-6">
         {budgets.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 oled:bg-gray-800 cyber:bg-purple-800/70 navy:bg-[#1d4ed8]/40 coral:bg-[#fecdd3] mint:bg-[#bbf7d0] rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">🎯</span>
             </div>
-            <p className="text-slate-600 dark:text-slate-300">No budgets set</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400">Create budgets to track your spending</p>
+            <p className="text-slate-600 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700">No budgets set</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 cyber:text-purple-300 navy:text-blue-300 coral:text-[#fb7185] mint:text-emerald-600">Create budgets to track your spending</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -34,19 +34,19 @@ export function BudgetOverview({ budgets, detailed = false }: BudgetOverviewProp
               <div key={budget._id} className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium text-slate-800 dark:text-slate-100">{budget.category}</p>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 capitalize">{budget.period} budget</p>
+                    <p className="font-medium text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">{budget.category}</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 cyber:text-purple-300 navy:text-blue-300 coral:text-[#fb7185] mint:text-emerald-600 capitalize">{budget.period} budget</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold text-slate-800 dark:text-slate-100">
+                    <p className="font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">
                       ${budget.spent.toFixed(2)} / ${budget.amount.toFixed(2)}
                     </p>
-                    <p className={`text-sm ${budget.remaining >= 0 ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"}`}>
+                    <p className={`text-sm ${budget.remaining >= 0 ? "text-green-600 dark:text-green-400 oled:text-green-400 cyber:text-emerald-300 navy:text-emerald-300 coral:text-[#be123c] mint:text-emerald-700" : "text-red-600 dark:text-red-400 oled:text-red-400 cyber:text-pink-300 navy:text-red-300 coral:text-[#be123c] mint:text-rose-500"}`}>
                       ${Math.abs(budget.remaining).toFixed(2)} {budget.remaining >= 0 ? "remaining" : "over"}
                     </p>
                   </div>
                 </div>
-                <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
+                <div className="w-full bg-slate-200 dark:bg-slate-700 oled:bg-gray-800 cyber:bg-purple-800/70 navy:bg-[#1d4ed8]/40 coral:bg-[#fecdd3] mint:bg-[#bbf7d0] rounded-full h-2">
                   <div
                     className={`h-2 rounded-full transition-all ${
                       budget.percentage > 100 ? "bg-red-500" :
@@ -56,7 +56,7 @@ export function BudgetOverview({ budgets, detailed = false }: BudgetOverviewProp
                   ></div>
                 </div>
                 {detailed && (
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
+                  <div className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-500 cyber:text-purple-300 navy:text-blue-300 coral:text-[#fb7185] mint:text-emerald-600">
                     {budget.percentage.toFixed(1)}% of budget used
                   </div>
                 )}

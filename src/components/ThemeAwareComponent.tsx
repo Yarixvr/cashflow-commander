@@ -7,7 +7,9 @@ interface ThemeAwareComponentProps {
   cyberClassName?: string;
   lightClassName?: string;
   darkClassName?: string;
-  autoClassName?: string;
+  navyClassName?: string;
+  coralClassName?: string;
+  mintClassName?: string;
 }
 
 export function ThemeAwareComponent({
@@ -17,21 +19,32 @@ export function ThemeAwareComponent({
   cyberClassName = '',
   lightClassName = '',
   darkClassName = '',
-  autoClassName = '',
+  navyClassName = '',
+  coralClassName = '',
+  mintClassName = '',
 }: ThemeAwareComponentProps) {
   const { theme } = useTheme();
 
   const getThemeClasses = () => {
     const baseClasses = className;
+
     const themeClasses = {
       light: lightClassName,
       dark: darkClassName,
       oled: oledClassName,
       cyber: cyberClassName,
-      auto: autoClassName,
-    };
+      navy: navyClassName,
+      coral: coralClassName,
+      mint: mintClassName,
+    } as const;
 
-    return `${baseClasses} ${themeClasses[theme] || ''}`;
+    const classes = [baseClasses];
+
+    if (theme && themeClasses[theme]) {
+      classes.push(themeClasses[theme]);
+    }
+
+    return classes.join(' ').trim();
   };
 
   return (
@@ -50,7 +63,9 @@ export function useThemeValues() {
     dark?: string;
     oled?: string;
     cyber?: string;
-    auto?: string;
+    navy?: string;
+    coral?: string;
+    mint?: string;
   }) => {
     return values[theme] || values.dark || '';
   };
@@ -93,14 +108,32 @@ export function useThemeValues() {
           border: 'border-purple-800',
           accent: 'bg-pink-500',
         };
-      case 'auto':
+      case 'navy':
         return {
-          bg: 'bg-auto',
-          card: 'bg-auto',
-          text: 'text-auto',
-          muted: 'text-auto',
-          border: 'border-auto',
-          accent: 'bg-auto',
+          bg: 'bg-[#0f172a]',
+          card: 'bg-[#1e3a8a]',
+          text: 'text-blue-100',
+          muted: 'text-blue-200',
+          border: 'border-blue-900',
+          accent: 'bg-blue-500',
+        };
+      case 'coral':
+        return {
+          bg: 'bg-[#ffe4e6]',
+          card: 'bg-[#fb7185]',
+          text: 'text-[#7f1d1d]',
+          muted: 'text-[#9f1239]',
+          border: 'border-[#fb7185]',
+          accent: 'bg-[#f97316]',
+        };
+      case 'mint':
+        return {
+          bg: 'bg-[#d1fae5]',
+          card: 'bg-[#34d399]',
+          text: 'text-[#065f46]',
+          muted: 'text-[#047857]',
+          border: 'border-[#0d9488]',
+          accent: 'bg-[#059669]',
         };
       default:
         return {
