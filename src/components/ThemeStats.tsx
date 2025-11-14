@@ -1,42 +1,11 @@
 import { useTheme } from '../hooks/useTheme';
+import { getThemeOption } from '../lib/themes';
 
 export function ThemeStats() {
   const { theme } = useTheme();
+  const themeOption = getThemeOption(theme);
 
-  const stats = {
-    light: {
-      battery: 'Standard',
-      oled: 'Not Optimized',
-      visibility: 'Excellent',
-      style: 'Clean & Bright'
-    },
-    dark: {
-      battery: 'Standard',
-      oled: 'Not Optimized',
-      visibility: 'Good',
-      style: 'Professional'
-    },
-    oled: {
-      battery: 'Excellent',
-      oled: 'Fully Optimized',
-      visibility: 'Perfect',
-      style: 'True Black'
-    },
-    cyber: {
-      battery: 'Good',
-      oled: 'Partially Optimized',
-      visibility: 'Good',
-      style: 'Futuristic'
-    },
-    auto: {
-      battery: 'System Dependent',
-      oled: 'System Dependent',
-      visibility: 'System Dependent',
-      style: 'Adaptive'
-    }
-  };
-
-  const currentStats = stats[theme];
+  const currentStats = themeOption.stats;
 
   return (
     <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 p-4 transition-all-fast">
@@ -49,9 +18,10 @@ export function ThemeStats() {
             Battery Usage
           </span>
           <span className={`text-xs font-medium ${
-            theme === 'oled' ? 'text-green-600 dark:text-green-500' :
-            theme === 'light' ? 'text-yellow-600' :
-            theme === 'cyber' ? 'text-purple-600' :
+            currentStats.battery === 'Excellent' ? 'text-green-600 dark:text-green-500' :
+            currentStats.battery === 'Good' ? 'text-blue-600' :
+            currentStats.battery === 'Standard' ? 'text-yellow-600' :
+            currentStats.battery === 'System Dependent' ? 'text-slate-500 dark:text-slate-400' :
             'text-blue-600'
           }`}>
             {currentStats.battery}
@@ -64,6 +34,7 @@ export function ThemeStats() {
           <span className={`text-xs font-medium ${
             currentStats.oled === 'Fully Optimized' ? 'text-green-600 dark:text-green-500' :
             currentStats.oled === 'Partially Optimized' ? 'text-yellow-600' :
+            currentStats.oled === 'System Dependent' ? 'text-slate-500 dark:text-slate-400' :
             'text-gray-600'
           }`}>
             {currentStats.oled}

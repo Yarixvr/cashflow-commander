@@ -2,9 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --color-light: #ffffff;
   --color-dark: #171717;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e0f2fe;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
 }
 
 /* Base transitions */
@@ -26,6 +34,16 @@
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
   }
+
+  html,
+  body {
+    scroll-behavior: smooth;
+  }
+
+  .mobile-smooth-scroll {
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 1.25rem;
+  }
 }
 
 /* Theme-specific styles */
@@ -46,8 +64,27 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  color: var(--color-dark);
-  background: var(--color-light);
+  color: var(--text-primary, #0f172a);
+  background: var(--bg-secondary, #ffffff);
+  scroll-behavior: smooth;
+}
+
+.mobile-scroll-body,
+body.mobile-smooth-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable both-edges;
+  touch-action: pan-y;
+}
+
+.theme-gradient {
+  background-image: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
+
+.mobile-smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
 }
 
 /* Light Theme */
@@ -59,6 +96,8 @@ body {
   --text-muted: #64748b;
   --border-primary: #e2e8f0;
   --border-secondary: #cbd5e1;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e0f2fe;
 }
 
 /* Dark Theme */
@@ -70,6 +109,8 @@ body {
   --text-muted: #94a3b8;
   --border-primary: #374151;
   --border-secondary: #4b5563;
+  --gradient-start: #0f172a;
+  --gradient-end: #1e293b;
 }
 
 /* OLED Theme - Pure Black */
@@ -81,6 +122,8 @@ body {
   --text-muted: #a0a0a0;
   --border-primary: #1a1a1a;
   --border-secondary: #1a1a1a;
+  --gradient-start: #000000;
+  --gradient-end: #050505;
 }
 
 /* Cyber Theme - Purple/Pink Aesthetic */
@@ -92,11 +135,44 @@ body {
   --text-muted: #b794f6;
   --border-primary: #2d1b69;
   --border-secondary: #2d1b69;
+  --gradient-start: #2d0a57;
+  --gradient-end: #4c1d95;
 }
 
-/* Auto Theme */
-.auto {
-  /* Will be set to light or dark based on system preference */
+.navy {
+  --bg-primary: #0f172a;
+  --bg-secondary: #0b1120;
+  --text-primary: #e0f2fe;
+  --text-secondary: #bfdbfe;
+  --text-muted: #93c5fd;
+  --border-primary: #1e3a8a;
+  --border-secondary: #1d4ed8;
+  --gradient-start: #0f172a;
+  --gradient-end: #1e3a8a;
+}
+
+.coral {
+  --bg-primary: #fff7ed;
+  --bg-secondary: #ffe4e6;
+  --text-primary: #7f1d1d;
+  --text-secondary: #9f1239;
+  --text-muted: #fb7185;
+  --border-primary: #fb7185;
+  --border-secondary: #f97316;
+  --gradient-start: #ffe4e6;
+  --gradient-end: #fb7185;
+}
+
+.mint {
+  --bg-primary: #ecfdf5;
+  --bg-secondary: #d1fae5;
+  --text-primary: #065f46;
+  --text-secondary: #047857;
+  --text-muted: #34d399;
+  --border-primary: #34d399;
+  --border-secondary: #0d9488;
+  --gradient-start: #d1fae5;
+  --gradient-end: #34d399;
 }
 
 /* Enhanced animations for mobile */
@@ -115,6 +191,69 @@ body {
 
   .mobile-rotate {
     animation: rotateSlow 10s linear infinite;
+  }
+}
+
+.auto-animate {
+  will-change: opacity, transform;
+}
+
+.is-mobile .auto-animate {
+  animation: mobileFadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-desktop .auto-animate {
+  animation: desktopFade 0.4s ease-out both;
+}
+
+.is-mobile .auto-animate:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.is-mobile .auto-animate:nth-child(3) {
+  animation-delay: 0.18s;
+}
+
+.is-desktop .auto-animate:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.is-desktop .auto-animate:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+@keyframes mobileFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes desktopFade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -199,9 +338,15 @@ body {
 }
 
 .chart-line {
-  @apply transition-all-fast stroke-dasharray 1000;
+  @apply transition-all-fast ease-out;
+  stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 0.7s ease-out, opacity 0.2s ease-out;
   animation: drawLine 2s ease-out forwards;
+}
+
+.chart-line:hover {
+  opacity: 0.8;
 }
 
 @keyframes drawLine {
