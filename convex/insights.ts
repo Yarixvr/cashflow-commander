@@ -18,9 +18,16 @@ export const list = query({
   },
 });
 
+type GeneratedInsight = {
+  type: string;
+  title: string;
+  description: string;
+  data: any;
+};
+
 export const generateInsights = action({
   args: {},
-  handler: async (ctx): Promise<any[]> => {
+  handler: async (ctx): Promise<GeneratedInsight[]> => {
     const userId = await getAuthUserId(ctx);
     if (!userId) throw new Error("Not authenticated");
 
@@ -30,13 +37,13 @@ export const generateInsights = action({
       { userId }
     );
 
-    // Always clear out previously generated insights before adding new ones so the
-    // list stays up to date and avoids duplicate entries on repeated refreshes.
-    await ctx.runMutation(internal.insights.clearForUser, { userId });
-
-    const insights: any[] = [];
+    const insights: GeneratedInsight[] = [];
 
     if (transactions.length === 0) {
+      await ctx.runMutation(internal.insights.replaceForUser, {
+        userId,
+        insights,
+      });
       return insights;
     }
 
@@ -186,13 +193,10 @@ export const generateInsights = action({
       });
     }
 
-    // Save insights to database
-    for (const insight of insights) {
-      await ctx.runMutation(internal.insights.create, {
-        userId,
-        ...insight,
-      });
-    }
+    await ctx.runMutation(internal.insights.replaceForUser, {
+      userId,
+      insights,
+    });
 
     return insights;
   },
@@ -243,6 +247,45 @@ export const clearForUser = internalMutation({
 
     for (const insight of existing) {
       await ctx.db.delete(insight._id);
+    }
+  },
+});
+
+export const replaceForUser = internalMutation({
+  args: {
+    userId: v.id("users"),
+    insights: v.array(
+      v.object({
+        type: v.string(),
+        title: v.string(),
+        description: v.string(),
+        data: v.any(),
+      })
+    ),
+  },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("insights")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    for (const insight of existing) {
+      await ctx.db.delete(insight._id);
+    }
+
+    const baseTime = Date.now();
+    let offset = 0;
+    for (const insight of args.insights) {
+      await ctx.db.insert("insights", {
+        userId: args.userId,
+        type: insight.type,
+        title: insight.title,
+        description: insight.description,
+        data: insight.data,
+        createdAt: baseTime + offset,
+        isRead: false,
+      });
+      offset += 1;
     }
   },
 });
