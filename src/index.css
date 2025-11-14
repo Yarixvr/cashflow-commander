@@ -11,6 +11,8 @@ html {
   --color-dark: #171717;
   --gradient-start: #f8fafc;
   --gradient-end: #e0f2fe;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
 }
 
 /* Base transitions */
@@ -52,8 +54,8 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  color: var(--color-dark);
-  background: var(--color-light);
+  color: var(--text-primary, #0f172a);
+  background: var(--bg-secondary, #ffffff);
 }
 
 .theme-gradient {

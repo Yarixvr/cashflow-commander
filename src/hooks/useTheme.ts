@@ -2,37 +2,65 @@ import { useEffect, useState } from 'react';
 import { THEME_ORDER, type ThemeId } from '../lib/themes';
 
 export type Theme = ThemeId;
+type ResolvedTheme = Exclude<Theme, 'auto'>;
 
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Check localStorage first
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) {
-      return stored;
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') {
+      return 'dark';
     }
 
-    // Default to dark theme for new users
-    return 'dark';
+    const stored = window.localStorage.getItem('theme') as Theme | null;
+    return stored ?? 'dark';
+  });
+
+  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
+    if (typeof window === 'undefined') {
+      return 'dark';
+    }
+
+    const stored = window.localStorage.getItem('theme') as Theme | null;
+    if (stored === 'auto' || stored === null) {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    return stored as ResolvedTheme;
   });
 
   useEffect(() => {
-    const root = document.documentElement;
-
-    // Remove all theme classes
-    root.classList.remove('light', 'dark', 'oled', 'cyber', 'navy', 'coral', 'mint', 'auto');
-
-    // Add the appropriate theme class
-    if (theme === 'auto') {
-      root.classList.add('auto');
-      // Check system preference for auto mode
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        root.classList.add('dark');
-      } else {
-        root.classList.add('light');
-      }
-    } else {
-      root.classList.add(theme);
+    if (typeof window === 'undefined') {
+      return;
     }
+
+    const root = document.documentElement;
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = (activeTheme: ResolvedTheme) => {
+      root.classList.remove('light', 'dark', 'oled', 'cyber', 'navy', 'coral', 'mint', 'auto');
+
+      if (theme === 'auto') {
+        root.classList.add('auto');
+      }
+
+      root.classList.add(activeTheme);
+      setResolvedTheme(activeTheme);
+    };
+
+    if (theme === 'auto') {
+      applyTheme(mediaQuery.matches ? 'dark' : 'light');
+
+      const handleChange = (event: MediaQueryListEvent) => {
+        applyTheme(event.matches ? 'dark' : 'light');
+      };
+
+      mediaQuery.addEventListener('change', handleChange);
+
+      return () => {
+        mediaQuery.removeEventListener('change', handleChange);
+      };
+    }
+
+    applyTheme(theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -40,14 +68,18 @@ export function useTheme() {
     const currentIndex = THEME_ORDER.indexOf(theme);
     const newTheme = THEME_ORDER[(currentIndex + 1) % THEME_ORDER.length];
 
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    setThemeState(newTheme);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('theme', newTheme);
+    }
   };
 
   const setThemeDirect = (newTheme: Theme) => {
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    setThemeState(newTheme);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem('theme', newTheme);
+    }
   };
 
-  return { theme, toggleTheme, setTheme: setThemeDirect };
+  return { theme, resolvedTheme, toggleTheme, setTheme: setThemeDirect };
 }

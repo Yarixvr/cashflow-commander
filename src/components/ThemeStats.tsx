@@ -2,7 +2,7 @@ import { useTheme } from '../hooks/useTheme';
 import { getThemeOption } from '../lib/themes';
 
 export function ThemeStats() {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
   const themeOption = getThemeOption(theme);
 
   const currentStats = themeOption.stats;
@@ -56,6 +56,16 @@ export function ThemeStats() {
             {currentStats.style}
           </span>
         </div>
+        {theme === 'auto' && (
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-slate-600 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400">
+              System preference
+            </span>
+            <span className="text-xs font-medium text-slate-700 dark:text-slate-200 oled:text-gray-200 cyber:text-purple-100">
+              {resolvedTheme === 'dark' ? 'Dark mode' : 'Light mode'}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

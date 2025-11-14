@@ -25,22 +25,33 @@ export function ThemeAwareComponent({
   coralClassName = '',
   mintClassName = '',
 }: ThemeAwareComponentProps) {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
 
   const getThemeClasses = () => {
     const baseClasses = className;
+    const activeTheme = theme === 'auto' ? resolvedTheme : theme;
+
     const themeClasses = {
       light: lightClassName,
       dark: darkClassName,
       oled: oledClassName,
       cyber: cyberClassName,
-      auto: autoClassName,
       navy: navyClassName,
       coral: coralClassName,
       mint: mintClassName,
-    };
+    } as const;
 
-    return `${baseClasses} ${themeClasses[theme] || ''}`;
+    const classes = [baseClasses];
+
+    if (theme === 'auto' && autoClassName) {
+      classes.push(autoClassName);
+    }
+
+    if (activeTheme && themeClasses[activeTheme]) {
+      classes.push(themeClasses[activeTheme]);
+    }
+
+    return classes.join(' ').trim();
   };
 
   return (
@@ -52,7 +63,7 @@ export function ThemeAwareComponent({
 
 // Hook for getting theme-specific values
 export function useThemeValues() {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
 
   const getThemeValue = (values: {
     light?: string;
@@ -64,11 +75,17 @@ export function useThemeValues() {
     coral?: string;
     mint?: string;
   }) => {
+    if (theme === 'auto') {
+      return values.auto || values[resolvedTheme] || values.dark || '';
+    }
+
     return values[theme] || values.dark || '';
   };
 
   const getThemeColors = () => {
-    switch (theme) {
+    const activeTheme = theme === 'auto' ? resolvedTheme : theme;
+
+    switch (activeTheme) {
       case 'light':
         return {
           bg: 'bg-white',
@@ -131,15 +148,6 @@ export function useThemeValues() {
           muted: 'text-[#047857]',
           border: 'border-[#0d9488]',
           accent: 'bg-[#059669]',
-        };
-      case 'auto':
-        return {
-          bg: 'bg-auto',
-          card: 'bg-auto',
-          text: 'text-auto',
-          muted: 'text-auto',
-          border: 'border-auto',
-          accent: 'bg-auto',
         };
       default:
         return {
