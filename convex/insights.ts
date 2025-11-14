@@ -4,17 +4,25 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
 import { Doc } from "./_generated/dataModel";
 
+const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
+
 export const list = query({
   args: {},
   handler: async (ctx) => {
     const userId = await getAuthUserId(ctx);
     if (!userId) return [];
 
-    return await ctx.db
+    const allInsights = await ctx.db
       .query("insights")
       .withIndex("by_user", (q) => q.eq("userId", userId))
-      .order("desc")
-      .take(10);
+      .collect();
+
+    const thirtyDaysAgo = Date.now() - THIRTY_DAYS_MS;
+
+    return allInsights
+      .filter((insight) => insight.createdAt >= thirtyDaysAgo)
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .slice(0, 10);
   },
 });
 
@@ -202,23 +210,6 @@ export const generateInsights = action({
   },
 });
 
-export const clearAll = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) throw new Error("Not authenticated");
-
-    const existing = await ctx.db
-      .query("insights")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
-      .collect();
-
-    for (const insight of existing) {
-      await ctx.db.delete(insight._id);
-    }
-  },
-});
-
 export const getRecentTransactions = internalQuery({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
@@ -230,6 +221,31 @@ export const getRecentTransactions = internalQuery({
       .collect();
 
     return transactions;
+  },
+});
+
+export const pruneStale = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const cutoff = Date.now() - THIRTY_DAYS_MS;
+
+    const insights = await ctx.db
+      .query("insights")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .collect();
+
+    let removed = 0;
+    for (const insight of insights) {
+      if (insight.createdAt < cutoff) {
+        await ctx.db.delete(insight._id);
+        removed += 1;
+      }
+    }
+
+    return { removed };
   },
 });
 
@@ -292,6 +308,7 @@ export const replaceForUser = internalMutation({
     }
   },
 });
+
 
 export const markAsRead = mutation({
   args: { id: v.id("insights") },

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -102,9 +102,14 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
 export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
-  const clearInsights = useMutation(api.insights.clearAll);
+  const pruneStaleInsights = useMutation(api.insights.pruneStale);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isClearing, setIsClearing] = useState(false);
+
+  useEffect(() => {
+    pruneStaleInsights().catch((error) => {
+      console.error("Failed to prune stale insights", error);
+    });
+  }, [pruneStaleInsights]);
 
   const handleMarkAsRead = async (insightId: string) => {
     if (!insightId) return;
@@ -117,17 +122,6 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
       await generateInsights();
     } finally {
       setIsGenerating(false);
-    }
-  };
-
-  const handleClearInsights = async () => {
-    setIsClearing(true);
-    try {
-      await clearInsights();
-    } catch (error) {
-      console.error("Failed to clear insights", error);
-    } finally {
-      setIsClearing(false);
     }
   };
 
@@ -167,13 +161,6 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
       <div className="p-6 border-b border-slate-200 dark:border-slate-700 oled:border-gray-800 cyber:border-purple-700 navy:border-blue-800 coral:border-[#fb7185] mint:border-emerald-300 flex justify-between items-center gap-3">
         <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">Smart Insights</h3>
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleClearInsights}
-            disabled={isClearing}
-            className="px-3 py-1 bg-slate-100 dark:bg-slate-800/60 oled:bg-gray-900/60 cyber:bg-purple-500/20 navy:bg-blue-900/40 coral:bg-[#fecdd3] mint:bg-emerald-200/40 text-slate-700 dark:text-slate-200 oled:text-gray-200 cyber:text-purple-100 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-800 oled:hover:bg-gray-900 cyber:hover:bg-purple-500/30 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] mint:hover:bg-emerald-200/60 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isClearing ? "Clearing..." : "Clear all"}
-          </button>
           <button
             onClick={handleGenerateInsights}
             disabled={isGenerating}
