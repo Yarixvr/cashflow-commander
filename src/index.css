@@ -40,14 +40,18 @@ html {
     scroll-behavior: smooth;
   }
 
-  body {
+  .mobile-scroll-body {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
+    scrollbar-gutter: stable both-edges;
   }
 
   .mobile-smooth-scroll {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: y proximity;
+    scroll-padding-top: 1.25rem;
+    touch-action: pan-y;
   }
 }
 
@@ -72,6 +76,12 @@ body {
   color: var(--text-primary, #0f172a);
   background: var(--bg-secondary, #ffffff);
   scroll-behavior: smooth;
+}
+
+.mobile-scroll-body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  touch-action: pan-y;
 }
 
 .theme-gradient {

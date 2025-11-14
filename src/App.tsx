@@ -33,6 +33,21 @@ function AppContent() {
     initializeCategories();
   }, [initializeCategories]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, [activeView]);
+
   return (
     <div className="min-h-screen">
       <header className="bg-white/80 dark:bg-slate-800/80 oled:bg-black/80 cyber:bg-purple-950/80 navy:bg-[#0f172a]/80 coral:bg-white/90 mint:bg-emerald-900/30 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 navy:border-blue-900 coral:border-pink-200 mint:border-emerald-400 sticky top-0 z-50 transition-all-fast auto-animate">

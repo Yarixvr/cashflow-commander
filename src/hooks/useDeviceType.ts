@@ -36,9 +36,24 @@ export function useDeviceType() {
   }, []);
 
   useEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
     const root = document.documentElement;
     root.classList.remove('is-mobile', 'is-desktop');
     root.classList.add(deviceType === 'mobile' ? 'is-mobile' : 'is-desktop');
+
+    const body = document.body;
+    if (!body) {
+      return;
+    }
+
+    if (deviceType === 'mobile') {
+      body.classList.add('mobile-scroll-body');
+    } else {
+      body.classList.remove('mobile-scroll-body');
+    }
   }, [deviceType]);
 
   return deviceType;
