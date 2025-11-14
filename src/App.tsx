@@ -1,4 +1,4 @@
-import { Authenticated, Unauthenticated, useQuery } from "convex/react";
+import { Authenticated, Unauthenticated } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
@@ -13,7 +13,7 @@ export default function App() {
   useDeviceType();
 
   return (
-    <div className="min-h-screen theme-gradient transition-all-fast mobile-smooth-scroll">
+    <div className="min-h-screen theme-gradient transition-all-fast">
       <Authenticated>
         <AppContent />
       </Authenticated>

@@ -50,9 +50,9 @@ export function useDeviceType() {
     }
 
     if (deviceType === 'mobile') {
-      body.classList.add('mobile-scroll-body');
+      body.classList.add('mobile-scroll-body', 'mobile-smooth-scroll');
     } else {
-      body.classList.remove('mobile-scroll-body');
+      body.classList.remove('mobile-scroll-body', 'mobile-smooth-scroll');
     }
   }, [deviceType]);
 
