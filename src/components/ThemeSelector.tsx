@@ -1,93 +1,11 @@
 import { useTheme } from '../hooks/useTheme';
 import { useState } from 'react';
+import { THEME_OPTIONS, getThemeOption } from '../lib/themes';
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
-
-  const themes = [
-    {
-      id: 'dark' as const,
-      name: 'Dark Mode',
-      description: 'Default dark theme with blue accents',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-        </svg>
-      ),
-      gradient: 'from-blue-500 to-blue-600',
-      preview: {
-        bg: 'bg-slate-800',
-        text: 'text-slate-100',
-        border: 'border-slate-700'
-      }
-    },
-    {
-      id: 'light' as const,
-      name: 'Light Mode',
-      description: 'Clean and bright interface',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-      ),
-      gradient: 'from-amber-400 to-orange-500',
-      preview: {
-        bg: 'bg-white',
-        text: 'text-slate-900',
-        border: 'border-slate-200'
-      }
-    },
-    {
-      id: 'oled' as const,
-      name: 'Pure Black (OLED)',
-      description: 'Perfect for OLED displays - saves battery',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" strokeWidth={2} />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2" />
-        </svg>
-      ),
-      gradient: 'from-gray-900 to-black',
-      preview: {
-        bg: 'bg-black',
-        text: 'text-white',
-        border: 'border-gray-800'
-      }
-    },
-    {
-      id: 'cyber' as const,
-      name: 'Cyber Purple',
-      description: 'Futuristic purple/pink aesthetic',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-        </svg>
-      ),
-      gradient: 'from-purple-600 to-pink-600',
-      preview: {
-        bg: 'bg-purple-950',
-        text: 'text-purple-100',
-        border: 'border-purple-800'
-      }
-    },
-    {
-      id: 'auto' as const,
-      name: 'Auto',
-      description: 'Automatically matches your system preference',
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
-      gradient: 'from-indigo-500 to-purple-500',
-      preview: {
-        bg: 'bg-gradient-to-r from-white to-slate-800',
-        text: 'text-black',
-        border: 'border-slate-300'
-      }
-    }
-  ];
+  const activeTheme = getThemeOption(theme);
 
   return (
     <div className="relative">
@@ -96,11 +14,11 @@ export function ThemeSelector() {
         className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 shadow-sm hover:shadow-md transition-all-fast btn-animated"
         aria-label="Open theme selector"
       >
-        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${themes.find(t => t.id === theme)?.gradient || 'from-blue-500 to-blue-600'} flex items-center justify-center text-white`}>
-          {themes.find(t => t.id === theme)?.icon}
+        <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${activeTheme.gradient} flex items-center justify-center text-white`}>
+          {activeTheme.icon}
         </div>
         <span className="text-sm font-medium text-slate-700 dark:text-slate-300 oled:text-gray-300 cyber:text-purple-300 hidden sm:inline">
-          {themes.find(t => t.id === theme)?.name}
+          {activeTheme.name}
         </span>
         <svg
           className={`w-4 h-4 text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
@@ -129,7 +47,7 @@ export function ThemeSelector() {
             </div>
 
             <div className="max-h-96 overflow-y-auto">
-              {themes.map((themeOption) => (
+              {THEME_OPTIONS.map((themeOption) => (
                 <button
                   key={themeOption.id}
                   onClick={() => {

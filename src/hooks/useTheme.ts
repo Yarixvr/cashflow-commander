@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { THEME_ORDER, type ThemeId } from '../lib/themes';
 
-export type Theme = 'light' | 'dark' | 'oled' | 'cyber' | 'auto';
+export type Theme = ThemeId;
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
@@ -18,10 +19,11 @@ export function useTheme() {
     const root = document.documentElement;
 
     // Remove all theme classes
-    root.classList.remove('light', 'dark', 'oled', 'cyber', 'auto');
+    root.classList.remove('light', 'dark', 'oled', 'cyber', 'navy', 'coral', 'mint', 'auto');
 
     // Add the appropriate theme class
     if (theme === 'auto') {
+      root.classList.add('auto');
       // Check system preference for auto mode
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         root.classList.add('dark');
@@ -35,9 +37,8 @@ export function useTheme() {
 
   const toggleTheme = () => {
     // Cycle through themes: dark -> light -> oled -> cyber -> auto -> dark
-    const themeOrder: Theme[] = ['dark', 'light', 'oled', 'cyber', 'auto'];
-    const currentIndex = themeOrder.indexOf(theme);
-    const newTheme = themeOrder[(currentIndex + 1) % themeOrder.length];
+    const currentIndex = THEME_ORDER.indexOf(theme);
+    const newTheme = THEME_ORDER[(currentIndex + 1) % THEME_ORDER.length];
 
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
