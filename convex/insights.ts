@@ -208,6 +208,18 @@ export const generateInsights = action({
   },
 });
 
+export const clearAll = action({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    await ctx.runMutation(internal.insights.clearForUser, { userId });
+
+    return { cleared: true };
+  },
+});
+
 export const getRecentTransactions = internalQuery({
   args: { userId: v.id("users") },
   handler: async (ctx, args) => {
