@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -101,6 +102,7 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
 export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleMarkAsRead = async (insightId: string) => {
     if (!insightId) return;
@@ -108,7 +110,12 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
   };
 
   const handleGenerateInsights = async () => {
-    await generateInsights();
+    setIsGenerating(true);
+    try {
+      await generateInsights();
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   type EnrichedInsight = Insight & {
@@ -148,9 +155,10 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
         <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">Smart Insights</h3>
         <button
           onClick={handleGenerateInsights}
-          className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 oled:bg-blue-900/40 cyber:bg-pink-500/20 navy:bg-blue-900/40 coral:bg-[#fecdd3] mint:bg-emerald-200/40 text-blue-600 dark:text-blue-400 oled:text-blue-300 cyber:text-pink-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700 rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 oled:hover:bg-blue-900/60 cyber:hover:bg-pink-500/30 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] mint:hover:bg-emerald-200/60 transition-colors"
+          disabled={isGenerating}
+          className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 oled:bg-blue-900/40 cyber:bg-pink-500/20 navy:bg-blue-900/40 coral:bg-[#fecdd3] mint:bg-emerald-200/40 text-blue-600 dark:text-blue-400 oled:text-blue-300 cyber:text-pink-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700 rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 oled:hover:bg-blue-900/60 cyber:hover:bg-pink-500/30 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] mint:hover:bg-emerald-200/60 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Refresh
+          {isGenerating ? "Generating..." : "Generate insights"}
         </button>
       </div>
       <div className="p-6">
@@ -225,7 +233,7 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
                 No insights yet
               </p>
               <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-200 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-600">
-                Refresh to generate insights from your latest transactions.
+                Click "Generate insights" to analyze your latest transactions.
               </p>
             </div>
           </div>

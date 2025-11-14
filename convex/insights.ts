@@ -25,7 +25,15 @@ export const generateInsights = action({
     if (!userId) throw new Error("Not authenticated");
 
     // Get recent transactions for analysis
-    const transactions: Doc<"transactions">[] = await ctx.runQuery(internal.insights.getRecentTransactions, { userId });
+    const transactions: Doc<"transactions">[] = await ctx.runQuery(
+      internal.insights.getRecentTransactions,
+      { userId }
+    );
+
+    // Always clear out previously generated insights before adding new ones so the
+    // list stays up to date and avoids duplicate entries on repeated refreshes.
+    await ctx.runMutation(internal.insights.clearForUser, { userId });
+
     const insights: any[] = [];
 
     if (transactions.length === 0) {
@@ -222,6 +230,20 @@ export const create = internalMutation({
       createdAt: Date.now(),
       isRead: false,
     });
+  },
+});
+
+export const clearForUser = internalMutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const existing = await ctx.db
+      .query("insights")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    for (const insight of existing) {
+      await ctx.db.delete(insight._id);
+    }
   },
 });
 
