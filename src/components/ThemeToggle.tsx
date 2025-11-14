@@ -2,14 +2,10 @@ import { useTheme } from '../hooks/useTheme';
 import { getThemeOption, THEME_ORDER } from '../lib/themes';
 
 export function ThemeToggle() {
-  const { theme, resolvedTheme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const themeOption = getThemeOption(theme);
   const nextTheme = THEME_ORDER[(THEME_ORDER.indexOf(theme) + 1) % THEME_ORDER.length];
   const nextThemeOption = getThemeOption(nextTheme);
-  const resolvedLabel =
-    theme === 'auto'
-      ? `Auto · ${resolvedTheme === 'dark' ? 'Dark' : 'Light'}`
-      : themeOption.name;
 
   return (
     <button
@@ -26,7 +22,7 @@ export function ThemeToggle() {
           Next: {nextThemeOption.name}
         </p>
         <p className="text-sm font-medium text-slate-800 dark:text-slate-100 oled:text-white cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-900">
-          {resolvedLabel}
+          {themeOption.name}
         </p>
       </div>
     </button>

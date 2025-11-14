@@ -51,12 +51,6 @@ export function useThemeShortcuts() {
         setTheme('mint');
       }
 
-      // Ctrl/Cmd + Shift + A for Auto theme
-      if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'A') {
-        event.preventDefault();
-        setTheme('auto');
-      }
-
       // Ctrl/Cmd + Shift + L for Light theme
       if ((event.ctrlKey || event.metaKey) && event.shiftKey && event.key === 'L') {
         event.preventDefault();
@@ -85,7 +79,6 @@ export function useThemeShortcuts() {
     { keys: 'Ctrl+Shift+B', description: 'Deep Navy theme' },
     { keys: 'Ctrl+Shift+R', description: 'Coral Reef theme' },
     { keys: 'Ctrl+Shift+M', description: 'Mint Fresh theme' },
-    { keys: 'Ctrl+Shift+A', description: 'Auto (system preference)' },
     { keys: 'Ctrl+Shift+L', description: 'Light mode' },
     { keys: 'Ctrl+Shift+N', description: 'Dark mode' },
   ];

@@ -114,13 +114,6 @@ body {
   --gradient-end: #4c1d95;
 }
 
-/* Auto Theme */
-.auto {
-  /* Will be set to light or dark based on system preference */
-  --gradient-start: #eef2ff;
-  --gradient-end: #e0e7ff;
-}
-
 .navy {
   --bg-primary: #0f172a;
   --bg-secondary: #0b1120;

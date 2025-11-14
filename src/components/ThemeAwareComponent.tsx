@@ -7,7 +7,6 @@ interface ThemeAwareComponentProps {
   cyberClassName?: string;
   lightClassName?: string;
   darkClassName?: string;
-  autoClassName?: string;
   navyClassName?: string;
   coralClassName?: string;
   mintClassName?: string;
@@ -20,16 +19,14 @@ export function ThemeAwareComponent({
   cyberClassName = '',
   lightClassName = '',
   darkClassName = '',
-  autoClassName = '',
   navyClassName = '',
   coralClassName = '',
   mintClassName = '',
 }: ThemeAwareComponentProps) {
-  const { theme, resolvedTheme } = useTheme();
+  const { theme } = useTheme();
 
   const getThemeClasses = () => {
     const baseClasses = className;
-    const activeTheme = theme === 'auto' ? resolvedTheme : theme;
 
     const themeClasses = {
       light: lightClassName,
@@ -43,12 +40,8 @@ export function ThemeAwareComponent({
 
     const classes = [baseClasses];
 
-    if (theme === 'auto' && autoClassName) {
-      classes.push(autoClassName);
-    }
-
-    if (activeTheme && themeClasses[activeTheme]) {
-      classes.push(themeClasses[activeTheme]);
+    if (theme && themeClasses[theme]) {
+      classes.push(themeClasses[theme]);
     }
 
     return classes.join(' ').trim();
@@ -63,29 +56,22 @@ export function ThemeAwareComponent({
 
 // Hook for getting theme-specific values
 export function useThemeValues() {
-  const { theme, resolvedTheme } = useTheme();
+  const { theme } = useTheme();
 
   const getThemeValue = (values: {
     light?: string;
     dark?: string;
     oled?: string;
     cyber?: string;
-    auto?: string;
     navy?: string;
     coral?: string;
     mint?: string;
   }) => {
-    if (theme === 'auto') {
-      return values.auto || values[resolvedTheme] || values.dark || '';
-    }
-
     return values[theme] || values.dark || '';
   };
 
   const getThemeColors = () => {
-    const activeTheme = theme === 'auto' ? resolvedTheme : theme;
-
-    switch (activeTheme) {
+    switch (theme) {
       case 'light':
         return {
           bg: 'bg-white',
