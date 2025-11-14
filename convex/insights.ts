@@ -322,33 +322,10 @@ export const removeDuplicates = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .collect();
 
-    const normalize = (value: string | undefined | null) =>
-      value?.trim().toLowerCase() ?? "";
-
-    const sortedByRecency = insights.sort(
-      (a, b) => (b.createdAt ?? 0) - (a.createdAt ?? 0)
-    );
-
-    const seen = new Set<string>();
-    const duplicates: typeof insights[number]["_id"][] = [];
-
-    for (const insight of sortedByRecency) {
-      const key = `${insight.type}|${normalize(insight.title)}|${normalize(
-        insight.description
-      )}`;
-
-      if (seen.has(key)) {
-        duplicates.push(insight._id);
-        continue;
-      }
-
-      seen.add(key);
+    for (const insight of insights) {
+      await ctx.db.delete(insight._id);
     }
 
-    for (const duplicateId of duplicates) {
-      await ctx.db.delete(duplicateId);
-    }
-
-    return { removed: duplicates.length };
+    return { removed: insights.length };
   },
 });

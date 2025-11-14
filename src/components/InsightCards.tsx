@@ -102,9 +102,9 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
 export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
-  const removeDuplicates = useMutation(api.insights.removeDuplicates);
+  const clearInsights = useMutation(api.insights.removeDuplicates);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   const handleMarkAsRead = async (insightId: string) => {
     if (!insightId) return;
@@ -120,12 +120,12 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
     }
   };
 
-  const handleRefreshDuplicates = async () => {
-    setIsRefreshing(true);
+  const handleClearInsights = async () => {
+    setIsClearing(true);
     try {
-      await removeDuplicates();
+      await clearInsights();
     } finally {
-      setIsRefreshing(false);
+      setIsClearing(false);
     }
   };
 
@@ -166,11 +166,11 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
         <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 cyber:text-purple-100 navy:text-blue-100 coral:text-[#7f1d1d] mint:text-emerald-800">Smart Insights</h3>
         <div className="flex items-center gap-2">
           <button
-            onClick={handleRefreshDuplicates}
-            disabled={isRefreshing}
+            onClick={handleClearInsights}
+            disabled={isClearing}
             className="px-3 py-1 bg-slate-100 dark:bg-slate-800/60 oled:bg-gray-900/60 cyber:bg-purple-500/20 navy:bg-blue-900/40 coral:bg-[#fecdd3] mint:bg-emerald-200/40 text-slate-700 dark:text-slate-200 oled:text-gray-200 cyber:text-purple-100 navy:text-blue-200 coral:text-[#be123c] mint:text-emerald-700 rounded-lg text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-800 oled:hover:bg-gray-900 cyber:hover:bg-purple-500/30 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] mint:hover:bg-emerald-200/60 transition-colors disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isRefreshing ? "Refreshing..." : "Refresh"}
+            {isClearing ? "Clearing..." : "Clear all"}
           </button>
           <button
             onClick={handleGenerateInsights}
