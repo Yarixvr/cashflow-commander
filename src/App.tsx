@@ -6,8 +6,6 @@ import { Toaster } from "sonner";
 import { Dashboard } from "./components/Dashboard";
 import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
-import { ThemeToggle } from "./components/ThemeToggle";
-import { ThemeSelector } from "./components/ThemeSelector";
 import { ThemeGallery } from "./components/ThemeGallery";
 import { useDeviceType } from "./hooks/useDeviceType";
 
@@ -68,8 +66,6 @@ function AppContent() {
               ))}
             </nav>
             <div className="flex items-center space-x-3">
-              <ThemeSelector />
-              <ThemeToggle />
               <SignOutButton />
             </div>
           </div>
