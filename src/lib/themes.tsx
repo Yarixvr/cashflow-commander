@@ -58,7 +58,7 @@ export const THEME_OPTIONS: ThemeOption[] = [
     gradient: "from-amber-400 to-orange-500",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 17.657l-.707-.707m12.728 0l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
       </svg>
     ),
     preview: {
@@ -97,35 +97,13 @@ export const THEME_OPTIONS: ThemeOption[] = [
     },
   },
   {
-    id: "cyber",
-    name: "Cyber Purple",
-    description: "Futuristic purple/pink aesthetic",
-    gradient: "from-purple-600 to-pink-600",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
-    preview: {
-      bg: "bg-purple-950",
-      text: "text-purple-100",
-      border: "border-purple-800",
-    },
-    stats: {
-      battery: "Good",
-      oled: "Partially Optimized",
-      visibility: "Good",
-      style: "Futuristic",
-    },
-  },
-  {
     id: "navy",
     name: "Deep Navy",
     description: "Moody blues with high contrast details",
     gradient: "from-slate-900 to-blue-900",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7l9 4 9-4M4 10v5l8 4 8-4v-5" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7l9 4 9-4M4 10h16M4 10h16M4 14h16M4 18h16M0 4 0-4-4V6M14 6h12V4h6" />
       </svg>
     ),
     preview: {
@@ -163,25 +141,69 @@ export const THEME_OPTIONS: ThemeOption[] = [
     },
   },
   {
-    id: "mint",
-    name: "Mint Fresh",
-    description: "Cool mint with gentle neutrals",
-    gradient: "from-emerald-400 to-teal-500",
+    id: "emeraldNoir",
+    name: "Emerald Noir",
+    description: "Rich emerald with noir elegance",
+    gradient: "from-#0C1110 to-#151A19",
     icon: (
       <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2a10 10 0 00-7.07 17.07L12 22l7.07-2.93A10 10 0 0012 2z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l2 2a2 2 0 010.85-8.85A2 2 0 0112 17.07L12 22l7.07-2.93A2 2 0 0012 2z" />
       </svg>
     ),
     preview: {
-      bg: "bg-gradient-to-r from-[#d1fae5] to-[#5eead4]",
-      text: "text-[#065f46]",
-      border: "border-[#34d399]",
+      bg: "bg-#151A19",
+      text: "text-#E9F8F5",
+      border: "border-#1B4E33",
+    },
+    stats: {
+      battery: "Excellent",
+      oled: "Not Optimized",
+      visibility: "Professional",
+      style: "Elegant",
+    },
+  },
+  {
+    id: "spaceGrey",
+    name: "Space Grey",
+    description: "Inspired by space exploration and minimalism",
+    gradient: "from-#1C1C1E to-#2C2C2E",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5c0-.552.848-1.687-1.893-1.893-1.893s-1.893 1.687-1.687H3c0-.552 2.448v7.099c0 2.448-1.343 4.465-4.465 4.465 4.465c0 4.465 2.448 0v-7.099L3 13.901C1.343 16.548 2.448 2.448 2.448 16.548 2.448 9.652 7.337 16.548 7.337c0 0 0-5.803-1.658-2.281-2.281-2.281-2.281-2.281l-2.281-2.281 2.281 2.281 2.281-2.281 5.803 1.658 2.281 16 16s0 0c5.652 7.337-5.652 7.337 7.337 5.652 7.337L16 22.658 2.281 2.281 2.281 2.281 16.548 2.281z" />
+      </svg>
+    ),
+    preview: {
+      bg: "bg-#2C2C2E",
+      text: "text-#F2F2F7",
+      border: "border-#151A19",
     },
     stats: {
       battery: "Standard",
       oled: "Not Optimized",
-      visibility: "Gentle",
-      style: "Fresh",
+      visibility: "High",
+      style: "Minimal",
+    },
+  },
+  {
+    id: "ultraBlue",
+    name: "Ultra Blue Nova",
+    description: "Stunning ultra blue for cosmic experience",
+    gradient: "from-#0D1117 to-#161B22",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 7l2 2a6 6 0 110.85-4.066 6.617-6.617 6.617 6.617 0-4.066-6.617 4.466 9.55 6.343c0 4.466-6.343 6.343 9.55 6.343-6.343 6.343-6.343-6.343 9.55 6.343 6.343z" />
+      </svg>
+    ),
+    preview: {
+      bg: "bg-#161B22",
+      text: "text-#E6EEFF",
+      border: "border-#0B4A7E",
+    },
+    stats: {
+      battery: "Good",
+      oled: "Not Optimized",
+      visibility: "Excellent",
+      style: "Cosmic",
     },
   },
 ];
@@ -190,10 +212,10 @@ export const THEME_ORDER: ThemeId[] = [
   "dark",
   "light",
   "oled",
-  "cyber",
-  "navy",
   "coral",
-  "mint",
+  "emeraldNoir",
+  "spaceGrey",
+  "ultraBlue",
 ];
 
 export const THEME_OPTION_MAP = THEME_OPTIONS.reduce<Record<ThemeId, ThemeOption>>(
