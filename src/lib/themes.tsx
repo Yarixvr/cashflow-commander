@@ -4,10 +4,10 @@ export type ThemeId =
   | "light"
   | "dark"
   | "oled"
-  | "cyber"
-  | "navy"
   | "coral"
-  | "mint";
+  | "emeraldNoir"
+  | "spaceGrey"
+  | "ultraBlue";
 
 export interface ThemeOption {
   id: ThemeId;
