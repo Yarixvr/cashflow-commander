@@ -116,7 +116,7 @@ export const createOrUpdateProfile = mutation({
 
 export const uploadProfileImage = mutation({
   args: {
-    imageData: v.string(), // Accept base64 string instead of bytes
+    imageUrl: v.string(), // Accept image URL directly
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
