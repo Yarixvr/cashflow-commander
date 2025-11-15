@@ -78,7 +78,7 @@ export const updateAvatar = mutation({
     avatarImageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
-    const userId = await ctx.auth.getUserId();
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
       throw new Error("Not authenticated");
     }
