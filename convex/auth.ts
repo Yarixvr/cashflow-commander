@@ -29,7 +29,7 @@ export const loggedInUser = query({
     const badges = await ctx.db
       .query("userBadges")
       .withIndex("by_user", (q) => q.eq("userId", userId))
-      .filter((q) => q.eq("isActive", true))
+      .filter((q) => q.eq("isActive", true as any))
       .collect();
 
     return {
