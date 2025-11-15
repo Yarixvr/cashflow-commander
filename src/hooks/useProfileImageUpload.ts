@@ -4,7 +4,6 @@ import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
 
 interface UploadResult {
-  storageId: string;
   url: string;
 }
 
