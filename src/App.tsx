@@ -87,6 +87,16 @@ function AppContent() {
             Dashboard
           </button>
           <button
+            onClick={() => setActiveView("profile")}
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all-fast ${
+              activeView === "profile"
+                ? "bg-blue-600 text-white shadow-md"
+                : "bg-white/70 dark:bg-slate-800/70 oled:bg-black/70 cyber:bg-purple-900/60 navy:bg-[#0f172a]/70 coral:bg-white/80 mint:bg-emerald-900/20 text-slate-600 dark:text-slate-300"
+            }`}
+          >
+            Profile
+          </button>
+          <button
             onClick={() => setActiveView("themes")}
             className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all-fast ${
               activeView === "themes"
