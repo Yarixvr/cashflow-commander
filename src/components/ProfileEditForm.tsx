@@ -122,6 +122,53 @@ export function ProfileEditForm({ profile, onClose, onSuccess }: ProfileEditForm
     }
   };
 
+  const processImage = async (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        // Calculate new dimensions (max 400x400)
+        let { width, height } = img;
+        const maxSize = 400;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height = (height * maxSize) / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = (width * maxSize) / height;
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        // Draw and crop to circular shape
+        ctx?.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Create circular clip
+        ctx?.beginPath();
+        ctx?.arc(width / 2, height / 2, Math.min(width, height) / 2, 0, 2 * Math.PI);
+        ctx?.closePath();
+        ctx?.clip();
+
+        // Draw image centered and scaled
+        ctx?.drawImage(img, (width - img.width) / 2, (height - img.height) / 2, img.width, img.height);
+
+        // Convert to base64
+        resolve(canvas.toDataURL('image/jpeg', 0.8));
+      };
+
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 dark:bg-black/70 oled:bg-black/90 flex items-center justify-center p-4 z-50 transition-all-fast">
       <div className="bg-white dark:bg-slate-800 oled:bg-black cyber:bg-purple-950 navy:bg-[#0f172a] coral:bg-white mint:bg-emerald-900 rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-slate-200 dark:border-slate-700 oled:border-gray-900 cyber:border-purple-800 navy:border-blue-900 coral:border-pink-200 mint:border-emerald-400 transition-all-fast">
