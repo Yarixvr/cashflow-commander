@@ -12,7 +12,7 @@ export function AdminPanel() {
 
   const grantBadge = useMutation(api.badges.grantBadge);
   const revokeBadge = useMutation(api.badges.revokeBadge);
-  const allUsers = useQuery(api.users.list);
+  const allUsers = useQuery(api.badges.listUsers);
   const allBadges = useQuery(api.badges.getAllBadges);
 
   const handleGrantBadge = async (e: React.FormEvent) => {
