@@ -10,6 +10,7 @@
 
 import type * as accounts from "../accounts.js";
 import type * as auth from "../auth.js";
+import type * as badges from "../badges.js";
 import type * as budgets from "../budgets.js";
 import type * as categories from "../categories.js";
 import type * as http from "../http.js";
@@ -27,6 +28,7 @@ import type {
 declare const fullApi: ApiFromModules<{
   accounts: typeof accounts;
   auth: typeof auth;
+  badges: typeof badges;
   budgets: typeof budgets;
   categories: typeof categories;
   http: typeof http;
