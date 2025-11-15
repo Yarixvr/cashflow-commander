@@ -93,7 +93,7 @@ export function useProfileImageUpload(): UseProfileImageUploadReturn {
     });
   }, []);
 
-  const uploadImage = useCallback(async (file: File): Promise<UploadResult | null> => {
+  const uploadImage = useCallback(async (file: File): Promise<{ url: string } | null> => {
     // Reset state
     setError(null);
     setProgress(0);
