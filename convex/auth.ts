@@ -134,7 +134,7 @@ export const uploadProfileImage = mutation({
     const storageId = "img-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
 
     // Use the base64 data as the URL (direct storage, avoiding Convex size limits)
-    const url = args.imageData.startsWith('data:') ? args.imageData : `data:image/jpeg;base64,${args.imageData}`;
+    const url = args.imageUrl.trim();
 
     // Delete old image if it exists
     if (existingProfile?.avatarImageId) {
