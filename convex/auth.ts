@@ -144,7 +144,7 @@ export const uploadProfileImage = mutation({
     if (existingProfile) {
       await ctx.db.patch(existingProfile._id, {
         avatarImageId: storageId,
-        avatarImageUrl: url,
+        avatarImageUrl: url || undefined,
         updatedAt: Date.now(),
       });
     }
