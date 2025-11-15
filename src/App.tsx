@@ -117,7 +117,7 @@ function AppContent() {
   );
 }
 
-function ProfileDropdown() {
+function ProfileDropdown({ setActiveView }: { setActiveView: (view: "dashboard" | "themes" | "profile") => void }) {
   const user = useQuery(api.auth.loggedInUser);
   const [showDropdown, setShowDropdown] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
