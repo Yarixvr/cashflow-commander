@@ -136,7 +136,7 @@ export const initializeBadges = mutation({
     // Check if this is the initial setup
     const existingBadges = await ctx.db
       .query("userBadges")
-      .filter((q) => q.eq("isActive", true))
+      .filter((q) => q.eq("isActive", true as any))
       .collect();
 
     if (existingBadges.length > 0) {
