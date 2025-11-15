@@ -31,3 +31,124 @@ export const loggedInUser = query({
     };
   },
 });
+
+export const getUserProfile = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", args.userId))
+      .first();
+    return profile;
+  },
+});
+
+export const createOrUpdateProfile = mutation({
+  args: {
+    username: v.string(),
+    bio: v.optional(v.string()),
+    avatarImageId: v.optional(v.id("_storage")),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Validation
+    if (args.username.length < 2) {
+      throw new Error("Username must be at least 2 characters");
+    }
+    if (args.username.length > 30) {
+      throw new Error("Username cannot exceed 30 characters");
+    }
+    if (args.bio && args.bio.length > 150) {
+      throw new Error("Bio cannot exceed 150 characters");
+    }
+
+    // Check if profile exists
+    const existingProfile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+
+    const now = Date.now();
+    const isProfileComplete = !!args.username;
+
+    if (existingProfile) {
+      // Update existing profile
+      const updateData: any = {
+        username: args.username,
+        bio: args.bio,
+        isProfileComplete,
+        updatedAt: now,
+      };
+
+      if (args.avatarImageId !== undefined) {
+        updateData.avatarImageId = args.avatarImageId;
+        // Generate URL for the new image
+        updateData.avatarImageUrl = (await ctx.storage.getUrl(args.avatarImageId)) || null;
+      }
+
+      await ctx.db.patch(existingProfile._id, updateData);
+      return await ctx.db.get(existingProfile._id);
+    } else {
+      // Create new profile
+      const profileData: any = {
+        userId,
+        username: args.username,
+        bio: args.bio,
+        isProfileComplete,
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      if (args.avatarImageId) {
+        profileData.avatarImageId = args.avatarImageId;
+        profileData.avatarImageUrl = await ctx.storage.getUrl(args.avatarImageId);
+      }
+
+      const profileId = await ctx.db.insert("profiles", profileData);
+      return await ctx.db.get(profileId);
+    }
+  },
+});
+
+export const uploadProfileImage = mutation({
+  args: {
+    file: v.bytes(),
+    fileName: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Get existing profile to check for old image
+    const existingProfile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+
+    // Store new image
+    const storageId = await ctx.storage.store(args.file, { fileName: args.fileName });
+    const url = await ctx.storage.getUrl(storageId);
+
+    // Delete old image if it exists
+    if (existingProfile?.avatarImageId) {
+      await ctx.storage.delete(existingProfile.avatarImageId);
+    }
+
+    // Update profile with new image
+    if (existingProfile) {
+      await ctx.db.patch(existingProfile._id, {
+        avatarImageId: storageId,
+        avatarImageUrl: url,
+        updatedAt: Date.now(),
+      });
+    }
+
+    return { storageId, url };
+  },
+});
