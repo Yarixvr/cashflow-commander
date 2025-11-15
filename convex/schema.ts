@@ -54,6 +54,18 @@ const applicationTables = {
     createdAt: v.number(),
     isRead: v.boolean(),
   }).index("by_user", ["userId"]),
+
+  profiles: defineTable({
+    userId: v.id("users"),
+    username: v.string(),
+    bio: v.optional(v.string()),
+    avatarImageUrl: v.optional(v.string()),
+    avatarImageId: v.optional(v.id("_storage")),
+    isProfileComplete: v.boolean(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_user", ["userId"])
+   .index("by_username", ["username"]),
 };
 
 export default defineSchema({
