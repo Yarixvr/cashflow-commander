@@ -90,7 +90,7 @@ export function ProfileEditForm({ profile, onClose, onSuccess }: ProfileEditForm
       const processedImage = await processImage(file);
 
       const result = await uploadProfileImage({
-        imageData: processedImage,
+        imageUrl: processedImage,
       });
 
       setAvatarPreview(result.url);
