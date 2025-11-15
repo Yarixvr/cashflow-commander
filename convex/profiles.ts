@@ -143,7 +143,7 @@ export const deleteAvatar = mutation({
 
 export const checkProfileCompletion = query({
   handler: async (ctx) => {
-    const userId = await ctx.auth.getUserId();
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
       return { isComplete: false, needsProfile: true };
     }
