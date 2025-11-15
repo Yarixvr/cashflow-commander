@@ -132,7 +132,7 @@ export const uploadProfileImage = mutation({
       .first();
 
     // Store new image
-    const storageId = await ctx.storage.store(args.file, { fileName: args.fileName });
+    const storageId = await ctx.storage.store(args.file);
     const url = await ctx.storage.getUrl(storageId);
 
     // Delete old image if it exists
