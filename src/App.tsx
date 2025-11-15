@@ -172,8 +172,7 @@ function ProfileDropdown({ setActiveView }: { setActiveView: (view: "dashboard" 
               <button
                 onClick={() => {
                   setShowDropdown(false);
-                  // Navigate to profile (you might need to handle this with state or routing)
-                  window.location.hash = '#profile';
+                  setActiveView("profile");
                 }}
                 className="w-full text-left px-3 py-2 text-sm text-slate-700 dark:text-slate-200 oled:text-gray-200 cyber:text-purple-200 navy:text-blue-200 coral:text-[#a21d4d] mint:text-emerald-800 hover:bg-slate-100 dark:hover:bg-slate-700 oled:hover:bg-gray-900 cyber:hover:bg-purple-900 navy:hover:bg-blue-900 coral:hover:bg-pink-50 mint:hover:bg-emerald-800 rounded-md transition-colors"
               >
