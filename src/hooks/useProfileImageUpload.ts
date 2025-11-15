@@ -111,19 +111,14 @@ export function useProfileImageUpload(): UseProfileImageUploadReturn {
       setProgress(20);
 
       // Process image (resize and optimize)
-      const processedBlob = await processImage(file);
+      const processedImage = await processImage(file);
       setProgress(60);
-
-      // Convert to bytes for Convex storage
-      const arrayBuffer = await processedBlob.arrayBuffer();
-      const bytes = new Uint8Array(arrayBuffer);
 
       setProgress(80);
 
-      // Upload to Convex
+      // Upload using URL approach (avoids Convex size limits)
       const result = await uploadProfileImage({
-        file: Array.from(bytes),
-        fileName: `profile-${Date.now()}.webp`,
+        imageUrl: processedImage,
       });
 
       setProgress(100);
