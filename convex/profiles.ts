@@ -5,7 +5,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 export const getProfileByUserId = query({
   args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
-    const userId = args.userId || (await ctx.auth.getUserId());
+    const userId = args.userId || (await getAuthUserId(ctx));
     if (!userId) {
       return null;
     }
