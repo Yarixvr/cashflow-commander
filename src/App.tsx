@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { ThemeGallery } from "./components/ThemeGallery";
 import { useDeviceType } from "./hooks/useDeviceType";
+import { ProfileCard } from "./components/ProfileCard";
+import { ProfileSetupPrompt } from "./components/ProfileSetupPrompt";
 
 export default function App() {
   useDeviceType();
