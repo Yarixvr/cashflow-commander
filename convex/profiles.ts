@@ -103,7 +103,7 @@ export const updateAvatar = mutation({
     // Update profile with new image
     await ctx.db.patch(existingProfile._id, {
       avatarImageId: args.avatarImageId,
-      avatarImageUrl,
+      avatarImageUrl: avatarImageUrl || undefined,
       updatedAt: Date.now(),
     });
 
