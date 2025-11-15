@@ -2,6 +2,23 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
+// Simple users query for admin panel
+export const listUsers = query({
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      return [];
+    }
+
+    const users = await ctx.db.query("users").collect();
+    return users.map(user => ({
+      ...user,
+      // Remove sensitive data for admin panel
+      password: undefined,
+    }));
+  },
+});
+
 export const getUserBadges = query({
   args: { userId: v.optional(v.id("users")) },
   handler: async (ctx, args) => {
