@@ -11,6 +11,7 @@ import { useDeviceType } from "./hooks/useDeviceType";
 import { ProfileCard } from "./components/ProfileCard";
 import { ProfileSetupPrompt } from "./components/ProfileSetupPrompt";
 import { ProfileEditForm } from "./components/ProfileEditForm";
+import { AdminPanel } from "./components/AdminPanel";
 
 export default function App() {
   useDeviceType();
