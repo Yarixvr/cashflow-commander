@@ -113,7 +113,7 @@ export const updateAvatar = mutation({
 
 export const deleteAvatar = mutation({
   handler: async (ctx) => {
-    const userId = await ctx.auth.getUserId();
+    const userId = await getAuthUserId(ctx);
     if (!userId) {
       throw new Error("Not authenticated");
     }
