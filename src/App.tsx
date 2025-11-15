@@ -52,11 +52,12 @@ function AppContent() {
             <nav className="hidden md:flex items-center space-x-1 mr-6">
               {[
                 { id: "dashboard", label: "Dashboard" },
+                { id: "profile", label: "Profile" },
                 { id: "themes", label: "Themes" },
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveView(item.id as "dashboard" | "themes")}
+                  onClick={() => setActiveView(item.id as "dashboard" | "themes" | "profile")}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all-fast auto-animate ${
                     activeView === item.id
                       ? "bg-blue-600 text-white shadow-md"
