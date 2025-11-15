@@ -25,9 +25,17 @@ export const loggedInUser = query({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .first();
 
+    // Get user badges
+    const badges = await ctx.db
+      .query("userBadges")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq("isActive", true))
+      .collect();
+
     return {
       ...user,
       profile,
+      badges,
     };
   },
 });
