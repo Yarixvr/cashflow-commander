@@ -70,7 +70,7 @@ function AppContent() {
               ))}
             </nav>
             <div className="flex items-center space-x-3">
-              <ProfileDropdown />
+              <ProfileDropdown setActiveView={setActiveView} />
             </div>
           </div>
         </div>
