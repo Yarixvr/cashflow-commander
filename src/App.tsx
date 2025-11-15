@@ -107,7 +107,10 @@ function AppContent() {
             Themes
           </button>
         </div>
-        {activeView === "dashboard" ? <Dashboard /> : <ThemeGallery />}
+        <ProfileSetupPrompt />
+        {activeView === "dashboard" && <Dashboard />}
+        {activeView === "profile" && <ProfileView />}
+        {activeView === "themes" && <ThemeGallery />}
       </main>
     </div>
   );
