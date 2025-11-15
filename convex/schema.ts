@@ -66,6 +66,18 @@ const applicationTables = {
     updatedAt: v.number(),
   }).index("by_user", ["userId"])
    .index("by_username", ["username"]),
+
+  userBadges: defineTable({
+    userId: v.id("users"),
+    badgeType: v.union(v.literal("founder"), v.literal("admin"), v.literal("special"), v.literal("custom")),
+    badgeName: v.string(),
+    badgeColor: v.string(),
+    badgeIcon: v.optional(v.string()),
+    grantedBy: v.id("users"),
+    grantedAt: v.number(),
+    isActive: v.boolean(),
+  }).index("by_user", ["userId"])
+    .index("by_type", ["badgeType"])
 };
 
 export default defineSchema({
