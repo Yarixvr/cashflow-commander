@@ -153,6 +153,6 @@ export const uploadProfileImage = mutation({
       });
     }
 
-    return { storageId, url };
+    return { url };
   },
 });
