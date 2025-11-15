@@ -18,6 +18,16 @@ export const loggedInUser = query({
     if (!user) {
       return null;
     }
-    return user;
+
+    // Get user profile
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .first();
+
+    return {
+      ...user,
+      profile,
+    };
   },
 });
