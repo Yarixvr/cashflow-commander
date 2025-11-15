@@ -29,7 +29,7 @@ export default function App() {
 
 function AppContent() {
   const initializeCategories = useMutation(api.categories.initializeDefaults);
-  const [activeView, setActiveView] = useState<"dashboard" | "themes">("dashboard");
+  const [activeView, setActiveView] = useState<"dashboard" | "themes" | "profile">("dashboard");
 
   useEffect(() => {
     initializeCategories();
