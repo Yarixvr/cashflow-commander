@@ -123,6 +123,7 @@ function AppContent() {
         <ProfileSetupPrompt />
         {activeView === "dashboard" && <Dashboard />}
         {activeView === "profile" && <ProfileView />}
+        {activeView === "admin" && <AdminPanel />}
         {activeView === "themes" && <ThemeGallery />}
       </main>
     </div>
