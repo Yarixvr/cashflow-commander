@@ -86,13 +86,11 @@ export function ProfileEditForm({ profile, onClose, onSuccess }: ProfileEditForm
 
     setImageUploading(true);
     try {
-      // Convert to bytes for Convex storage
-      const arrayBuffer = await file.arrayBuffer();
-      const bytes = new Uint8Array(arrayBuffer);
+      // Process image and convert to base64
+      const processedImage = await processImage(file);
 
       const result = await uploadProfileImage({
-        file: Array.from(bytes),
-        fileName: file.name,
+        imageData: processedImage,
       });
 
       setAvatarPreview(result.url);
