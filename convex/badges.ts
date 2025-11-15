@@ -199,7 +199,7 @@ export const getAllBadges = query({
   handler: async (ctx) => {
     const badges = await ctx.db
       .query("userBadges")
-      .filter((q) => q.eq("isActive", true))
+      .filter((q) => q.eq("isActive", true as any))
       .collect();
 
     // Get user details for each badge
