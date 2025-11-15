@@ -148,7 +148,6 @@ export const uploadProfileImage = mutation({
     // Update profile with new image data
     if (existingProfile) {
       await ctx.db.patch(existingProfile._id, {
-        avatarImageId: storageId as any, // Type cast for storage reference
         avatarImageUrl: url,
         updatedAt: Date.now(),
       });
