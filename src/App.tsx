@@ -55,11 +55,12 @@ function AppContent() {
               {[
                 { id: "dashboard", label: "Dashboard" },
                 { id: "profile", label: "Profile" },
+                { id: "admin", label: "Admin" },
                 { id: "themes", label: "Themes" },
               ].map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => setActiveView(item.id as "dashboard" | "themes" | "profile")}
+                  onClick={() => setActiveView(item.id as "dashboard" | "themes" | "profile" | "admin")}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all-fast auto-animate ${
                     activeView === item.id
                       ? "bg-blue-600 text-white shadow-md"
