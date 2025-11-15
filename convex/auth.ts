@@ -116,8 +116,7 @@ export const createOrUpdateProfile = mutation({
 
 export const uploadProfileImage = mutation({
   args: {
-    file: v.bytes(),
-    fileName: v.string(),
+    imageData: v.string(), // Accept base64 string instead of bytes
   },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
@@ -131,25 +130,26 @@ export const uploadProfileImage = mutation({
       .withIndex("by_user", (q) => q.eq("userId", userId))
       .first();
 
-    // For now, just return a mock URL - the storage API may be different
-    // TODO: Implement proper file storage when Convex storage API is clarified
-    const storageId = "mock-storage-id-" + Date.now();
-    const url = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+    // Generate a storage ID for the image
+    const storageId = "img-" + Date.now() + "-" + Math.random().toString(36).substr(2, 9);
+
+    // Use the base64 data as the URL (direct storage, avoiding Convex size limits)
+    const url = args.imageData.startsWith('data:') ? args.imageData : `data:image/jpeg;base64,${args.imageData}`;
 
     // Delete old image if it exists
     if (existingProfile?.avatarImageId) {
       try {
         await ctx.storage.delete(existingProfile.avatarImageId);
       } catch (e) {
-        // Ignore delete errors for now
+        // Ignore delete errors
       }
     }
 
-    // Update profile with new image
+    // Update profile with new image data
     if (existingProfile) {
       await ctx.db.patch(existingProfile._id, {
-        avatarImageId: storageId as any, // Type cast for now
-        avatarImageUrl: url || undefined,
+        avatarImageId: storageId as any, // Type cast for storage reference
+        avatarImageUrl: url,
         updatedAt: Date.now(),
       });
     }
