@@ -69,7 +69,7 @@ function AppContent() {
               ))}
             </nav>
             <div className="flex items-center space-x-3">
-              <SignOutButton />
+              <ProfileDropdown />
             </div>
           </div>
         </div>
