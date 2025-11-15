@@ -108,6 +108,76 @@ export const revokeBadge = mutation({
   },
 });
 
+export const initializeBadges = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      throw new Error("Not authenticated");
+    }
+
+    // Check if this is the initial setup
+    const existingBadges = await ctx.db
+      .query("userBadges")
+      .filter((q) => q.eq("isActive", true))
+      .collect();
+
+    if (existingBadges.length > 0) {
+      return { message: "Badges already initialized", alreadyExists: true };
+    }
+
+    const user = await ctx.db.get(userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Check if this is Yari (kn77xa9x1ttgbk1jw8p234d0cd7vfqjn)
+    const isYari = userId === "kn77xa9x1ttgbk1jw8p234d0cd7vfqjn";
+
+    const badgesToGrant = [];
+
+    // Grant founder badge to Yari
+    if (isYari) {
+      badgesToGrant.push({
+        userId: userId,
+        badgeType: "founder" as const,
+        badgeName: "Cashflow Commander Founder",
+        badgeColor: "#FFD700",
+        badgeIcon: "👑",
+        grantedBy: userId, // Self-granted
+        grantedAt: Date.now(),
+        isActive: true,
+      });
+
+      // Also grant admin badge to Yari
+      badgesToGrant.push({
+        userId: userId,
+        badgeType: "admin" as const,
+        badgeName: "System Administrator",
+        badgeColor: "#FF6B35",
+        badgeIcon: "⚡",
+        grantedBy: userId, // Self-granted
+        grantedAt: Date.now(),
+        isActive: true,
+      });
+    }
+
+    // Insert all badges
+    const insertedBadges = await Promise.all(
+      badgesToGrant.map(async (badge) => {
+        const badgeId = await ctx.db.insert("userBadges", badge);
+        return await ctx.db.get(badgeId);
+      })
+    );
+
+    return {
+      message: `Initialized ${insertedBadges.length} badges for ${user.email}`,
+      badges: insertedBadges,
+      alreadyExists: false
+    };
+  },
+});
+
 export const getAllBadges = query({
   handler: async (ctx) => {
     const badges = await ctx.db
