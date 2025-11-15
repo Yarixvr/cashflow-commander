@@ -117,6 +117,30 @@ export function ProfileCard({ compact = false, showEditButton = true }: ProfileC
                 </span>
               )}
             </div>
+
+            {/* Badges */}
+            {user.badges && user.badges.length > 0 && (
+              <div className="mt-3 space-y-2">
+                <div className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 cyber:text-purple-300 navy:text-blue-200 coral:text-[#9f1239] mint:text-emerald-700 mb-1 transition-all-fast">
+                  Badges
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {user.badges.map((badge) => (
+                    <span
+                      key={badge._id}
+                      className="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md"
+                      style={{
+                        backgroundColor: badge.badgeColor + "20",
+                        color: badge.badgeColor,
+                      }}
+                    >
+                      <span className="mr-1">{badge.badgeIcon || "⭐"}</span>
+                      <span>{badge.badgeType.charAt(0).toUpperCase() + badge.badgeType.slice(1)}</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
