@@ -21,16 +21,7 @@ export default {
           text: '#ffffff',
           muted: '#a0a0a0',
         },
-        // Cyber theme colors - purple/pink aesthetic
-        cyber: {
-          bg: '#0f0a1f',
-          card: '#1a0f2e',
-          border: '#2d1b69',
-          text: '#f8f0ff',
-          accent: '#ff00ff',
-          accent2: '#00ffff',
-          muted: '#b794f6',
-        },
+        // Navy theme colors
         navy: {
           bg: '#0f172a',
           card: '#1e3a8a',
@@ -38,6 +29,7 @@ export default {
           text: '#e0f2fe',
           muted: '#93c5fd',
         },
+        // Coral theme colors
         coral: {
           bg: '#ffe4e6',
           card: '#fb7185',
@@ -45,12 +37,31 @@ export default {
           text: '#7f1d1d',
           muted: '#fb7185',
         },
-        mint: {
-          bg: '#d1fae5',
-          card: '#34d399',
-          border: '#0d9488',
-          text: '#065f46',
-          muted: '#5eead4',
+        // Emerald Noir theme - dark luxury green
+        emerald: {
+          bg: '#0a1612',
+          card: '#0f1f18',
+          border: '#065f46',
+          text: '#d1fae5',
+          muted: '#6ee7b7',
+          accent: '#fbbf24',
+        },
+        // Space Grey theme - Apple inspired
+        space: {
+          bg: '#1c1c1e',
+          card: '#2c2c2e',
+          border: '#3a3a3c',
+          text: '#f2f2f7',
+          muted: '#aeaeb2',
+        },
+        // Ultra Blue Nova theme - cosmic blue
+        nova: {
+          bg: '#020617',
+          card: '#0f172a',
+          border: '#0369a1',
+          text: '#e0f2fe',
+          muted: '#38bdf8',
+          accent: '#f472b6',
         },
       },
       spacing: {
@@ -107,7 +118,7 @@ export default {
   },
   plugins: [
     function ({ addVariant }) {
-      const themes = ['light', 'dark', 'oled', 'cyber', 'navy', 'coral', 'mint', 'auto'];
+      const themes = ['light', 'dark', 'oled', 'navy', 'coral', 'emerald', 'space', 'nova', 'auto'];
       themes.forEach((theme) => {
         addVariant(theme, `.${theme} &`);
       });
