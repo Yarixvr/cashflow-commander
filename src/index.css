@@ -1,0 +1,497 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --color-light: #ffffff;
+  --color-dark: #171717;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e0f2fe;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+}
+
+/* Base transitions */
+* {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced transitions for smoother animations */
+.transition-all-fast {
+  transition-duration: 200ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced transitions for mobile */
+@media (max-width: 768px) {
+  .transition-all-mobile {
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+}
+
+/* Theme-specific styles */
+body {
+  font-family:
+    "Inter Variable",
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    "Noto Sans",
+    sans-serif,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    "Noto Color Emoji";
+  color: var(--text-primary, #0f172a);
+  background: var(--bg-secondary, #ffffff);
+}
+
+.theme-gradient {
+  background-image: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+}
+
+/* Light Theme */
+.light {
+  --bg-primary: white;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border-primary: #e2e8f0;
+  --border-secondary: #cbd5e1;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e0f2fe;
+}
+
+/* Dark Theme */
+.dark {
+  --bg-primary: #1e293b;
+  --bg-secondary: #0f172a;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-primary: #374151;
+  --border-secondary: #4b5563;
+  --gradient-start: #0f172a;
+  --gradient-end: #1e293b;
+}
+
+/* OLED Theme - Pure Black */
+.oled {
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --text-muted: #a0a0a0;
+  --border-primary: #1a1a1a;
+  --border-secondary: #1a1a1a;
+  --gradient-start: #000000;
+  --gradient-end: #050505;
+}
+
+/* Navy Theme */
+.navy {
+  --bg-primary: #0f172a;
+  --bg-secondary: #0b1120;
+  --text-primary: #e0f2fe;
+  --text-secondary: #bfdbfe;
+  --text-muted: #93c5fd;
+  --border-primary: #1e3a8a;
+  --border-secondary: #1d4ed8;
+  --gradient-start: #0f172a;
+  --gradient-end: #1e3a8a;
+}
+
+/* Coral Theme */
+.coral {
+  --bg-primary: #fff7ed;
+  --bg-secondary: #ffe4e6;
+  --text-primary: #7f1d1d;
+  --text-secondary: #9f1239;
+  --text-muted: #fb7185;
+  --border-primary: #fb7185;
+  --border-secondary: #f97316;
+  --gradient-start: #ffe4e6;
+  --gradient-end: #fb7185;
+}
+
+/* Emerald Noir Theme - Dark Luxury Green */
+.emerald {
+  --bg-primary: #0a1612;
+  --bg-secondary: #0f1f18;
+  --text-primary: #d1fae5;
+  --text-secondary: #6ee7b7;
+  --text-muted: #34d399;
+  --border-primary: #065f46;
+  --border-secondary: #047857;
+  --gradient-start: #0a1612;
+  --gradient-end: #064e3b;
+}
+
+/* Space Grey Theme - Apple Inspired */
+.space {
+  --bg-primary: #1c1c1e;
+  --bg-secondary: #2c2c2e;
+  --text-primary: #f2f2f7;
+  --text-secondary: #aeaeb2;
+  --text-muted: #8e8e93;
+  --border-primary: #3a3a3c;
+  --border-secondary: #48484a;
+  --gradient-start: #1c1c1e;
+  --gradient-end: #2c2c2e;
+}
+
+/* Ultra Blue Nova Theme - Cosmic Blue */
+.nova {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --text-primary: #e0f2fe;
+  --text-secondary: #38bdf8;
+  --text-muted: #7dd3fc;
+  --border-primary: #0369a1;
+  --border-secondary: #0284c7;
+  --gradient-start: #020617;
+  --gradient-end: #0c4a6e;
+}
+
+/* Enhanced animations for mobile */
+@media (max-width: 768px) {
+  .mobile-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .mobile-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  .mobile-pulse {
+    animation: pulseGlow 2s ease-in-out infinite;
+  }
+
+  .mobile-rotate {
+    animation: rotateSlow 10s linear infinite;
+  }
+}
+
+.auto-animate {
+  will-change: opacity, transform;
+}
+
+.is-mobile .auto-animate {
+  animation: mobileFadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.is-desktop .auto-animate {
+  animation: desktopFade 0.4s ease-out both;
+}
+
+.is-mobile .auto-animate:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.is-mobile .auto-animate:nth-child(3) {
+  animation-delay: 0.18s;
+}
+
+.is-desktop .auto-animate:nth-child(2) {
+  animation-delay: 0.06s;
+}
+
+.is-desktop .auto-animate:nth-child(3) {
+  animation-delay: 0.12s;
+}
+
+@keyframes mobileFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes desktopFade {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtle desktop animations */
+@media (min-width: 769px) {
+  .desktop-glow:hover {
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));
+    transition: filter 300ms ease-in-out;
+  }
+
+  .desktop-scale:hover {
+    transform: scale(1.02);
+    transition: transform 200ms ease-in-out;
+  }
+}
+
+/* Custom CSS classes */
+.accent-text {
+  @apply text-slate-600 dark:text-slate-300;
+}
+
+/* Auth components with enhanced animations */
+.auth-input-field {
+  @apply w-full px-4 py-3 rounded-container bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-600 dark:text-slate-100 focus:border-primary dark:focus:border-blue-400 focus:ring-1 focus:ring-primary dark:focus:ring-blue-400 outline-none transition-all-fast shadow-sm hover:shadow-md dark:hover:shadow-lg;
+}
+
+.auth-button {
+  @apply w-full px-4 py-3 rounded bg-primary dark:bg-blue-500 text-white font-semibold hover:bg-primary-hover dark:hover:bg-blue-600 transition-all-fast shadow-sm hover:shadow-md dark:hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95;
+}
+
+/* Enhanced card components */
+.card-hover {
+  @apply transition-all-fast hover:shadow-lg dark:hover:shadow-2xl hover:-translate-y-1;
+}
+
+.card-glow {
+  @apply transition-all-fast hover:shadow-2xl dark:hover:shadow-black;
+}
+
+/* Mobile-optimized hover effects */
+@media (max-width: 768px) {
+  .card-mobile-hover {
+    @apply hover:shadow-xl dark:hover:shadow-black hover:-translate-y-2 transition-all-mobile;
+  }
+}
+
+/* Enhanced button animations */
+.btn-animated {
+  @apply transition-all-fast active:scale-95 hover:scale-105;
+}
+
+.btn-glow:hover {
+  @apply transition-all-fast hover:shadow-lg hover:shadow-blue-500/25 dark:hover:shadow-purple-500/25;
+}
+
+/* Enhanced theme selector animations */
+.theme-option {
+  @apply transition-all-fast hover:scale-105 hover:shadow-lg cursor-pointer;
+}
+
+.theme-option.selected {
+  @apply ring-2 ring-blue-500 ring-offset-2 dark:ring-offset-slate-900 animate-pulse-glow;
+}
+
+/* Loading and skeleton animations */
+.skeleton-loading {
+  @apply animate-pulse bg-slate-200 dark:bg-slate-700;
+}
+
+.skeleton-text {
+  @apply animate-pulse bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-600 bg-clip-text text-transparent;
+}
+
+/* Enhanced progress bars */
+.progress-animated {
+  @apply transition-all-fast ease-out;
+}
+
+/* Enhanced chart animations */
+.chart-bar {
+  @apply transition-all-fast ease-out hover:opacity-80;
+}
+
+.chart-line {
+  @apply transition-all-fast ease-out;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 0.7s ease-out, opacity 0.2s ease-out;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.chart-line:hover {
+  opacity: 0.8;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Enhanced notification animations */
+.notification-slide-in {
+  animation: slideIn 0.3s ease-out, fade-in 0.3s ease-out;
+}
+
+.notification-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+/* Enhanced modal animations */
+.modal-backdrop {
+  @apply transition-all-fast backdrop-blur-sm;
+}
+
+.modal-content {
+  @apply transition-all-fast animate-scale-in;
+}
+
+/* Enhanced tab animations */
+.tab-indicator {
+  @apply transition-all-fast;
+}
+
+.tab-content {
+  @apply transition-all-fast animate-fade-in;
+}
+
+/* Enhanced form animations */
+.form-input-focus {
+  @apply transition-all-fast focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-blue-400/20;
+}
+
+.form-label-animated {
+  @apply transition-all-fast;
+}
+
+/* Enhanced navigation animations */
+.nav-item {
+  @apply transition-all-fast hover:translate-x-1;
+}
+
+/* Enhanced dropdown animations */
+.dropdown-content {
+  @apply transition-all-fast animate-slide-in origin-top;
+}
+
+/* Enhanced tooltip animations */
+.tooltip {
+  @apply transition-all-fast animate-fade-in;
+}
+
+/* Enhanced scroll animations */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced focus animations */
+.focus-ring {
+  @apply transition-all-fast focus:ring-2 focus:ring-blue-500/50 dark:focus:ring-blue-400/50 ring-offset-2 ring-offset-white dark:ring-offset-slate-900;
+}
+
+/* Enhanced disabled animations */
+.disabled {
+  @apply opacity-50 cursor-not-allowed transition-all-fast;
+}
+
+/* Enhanced loading states */
+.loading-spinner {
+  @apply animate-spin;
+}
+
+.loading-dots {
+  @apply flex gap-1;
+}
+
+.loading-dots span {
+  @apply w-2 h-2 bg-current rounded-full animate-bounce;
+}
+
+.loading-dots span:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Mobile-first responsive animations */
+@media (max-width: 640px) {
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-visible {
+    display: block;
+  }
+
+  .mobile-text-sm {
+    font-size: 0.875rem;
+  }
+
+  .mobile-text-xs {
+    font-size: 0.75rem;
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) {
+  .touch-friendly:hover {
+    /* Remove hover effects on touch devices */
+    transform: none !important;
+  }
+}
+
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .high-contrast-border {
+    border-width: 2px;
+  }
+
+  .high-contrast-text {
+    font-weight: 600;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
