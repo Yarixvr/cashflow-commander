@@ -102,8 +102,10 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
 export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
   const markAsRead = useMutation(api.insights.markAsRead);
   const generateInsights = useAction(api.insights.generateInsights);
+  const clearAllInsights = useMutation(api.insights.clearAll);
   const pruneStaleInsights = useMutation(api.insights.pruneStale);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
 
   useEffect(() => {
     pruneStaleInsights().catch((error) => {
@@ -122,6 +124,15 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
       await generateInsights();
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const handleClearInsights = async () => {
+    setIsClearing(true);
+    try {
+      await clearAllInsights();
+    } finally {
+      setIsClearing(false);
     }
   };
 
@@ -163,11 +174,20 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
         <div className="flex items-center gap-2">
           <button
             onClick={handleGenerateInsights}
-            disabled={isGenerating}
-            className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 oled:bg-blue-900/40 emerald:bg-emerald-700/40 space:bg-zinc-600 nova:bg-sky-800/50 navy:bg-blue-900/40 coral:bg-[#fecdd3] text-blue-600 dark:text-blue-400 oled:text-blue-300 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c] rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 oled:hover:bg-blue-900/60 emerald:hover:bg-emerald-700/60 space:hover:bg-zinc-500 nova:hover:bg-sky-800/70 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] transition-colors disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isGenerating || isClearing}
+            className={`insight-btn px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 oled:bg-blue-900/40 emerald:bg-emerald-700/40 space:bg-zinc-600 nova:bg-sky-800/50 navy:bg-blue-900/40 coral:bg-[#fecdd3] text-blue-600 dark:text-blue-400 oled:text-blue-300 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c] rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 oled:hover:bg-blue-900/60 emerald:hover:bg-emerald-700/60 space:hover:bg-zinc-500 nova:hover:bg-sky-800/70 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] disabled:cursor-not-allowed disabled:opacity-60 ${isGenerating ? 'insight-btn-loading' : ''}`}
           >
-            {isGenerating ? "Generating..." : "Generate insights"}
+            {isGenerating ? "Generating..." : "Generate"}
           </button>
+          {insights.length > 0 && (
+            <button
+              onClick={handleClearInsights}
+              disabled={isGenerating || isClearing}
+              className={`insight-btn px-3 py-1.5 bg-red-100 dark:bg-red-900/30 oled:bg-red-900/40 emerald:bg-red-900/40 space:bg-red-900/40 nova:bg-red-900/40 navy:bg-red-900/40 coral:bg-red-200 text-red-600 dark:text-red-400 oled:text-red-300 emerald:text-red-300 space:text-red-300 nova:text-red-300 navy:text-red-300 coral:text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/50 oled:hover:bg-red-900/60 emerald:hover:bg-red-900/60 space:hover:bg-red-900/60 nova:hover:bg-red-900/60 navy:hover:bg-red-900/60 coral:hover:bg-red-300 disabled:cursor-not-allowed disabled:opacity-60 ${isClearing ? 'insight-btn-loading' : ''}`}
+            >
+              {isClearing ? "Clearing..." : "Clear all"}
+            </button>
+          )}
         </div>
       </div>
       <div className="p-6">
@@ -190,7 +210,7 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
               return (
                 <div
                   key={insight._id}
-                  className={`group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600 oled:border-gray-700 emerald:border-emerald-600 space:border-zinc-500 nova:border-sky-600 navy:border-blue-800 coral:border-[#fda4af] transition-all hover:-translate-y-1 hover:shadow-lg ${accentClassName} ${unreadHighlight}`}
+                  className={`insight-card insight-card-hover group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-600 oled:border-gray-700 emerald:border-emerald-600 space:border-zinc-500 nova:border-sky-600 navy:border-blue-800 coral:border-[#fda4af] ${accentClassName} ${unreadHighlight}`}
                 >
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/10 dark:bg-black/10" />
                   <div className="relative flex h-full flex-col space-y-3 p-4">

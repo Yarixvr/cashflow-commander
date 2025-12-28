@@ -7,8 +7,12 @@
     <script>
       (function() {
         const theme = localStorage.getItem('theme');
-        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Default to dark mode for new users (no theme stored)
+        if (!theme || theme === 'dark') {
           document.documentElement.classList.add('dark');
+        } else if (theme && theme !== 'light') {
+          // Apply the stored theme class (for themed modes like oled, nova, etc.)
+          document.documentElement.classList.add(theme);
         }
       })();
     </script>

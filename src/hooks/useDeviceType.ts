@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export type DeviceType = 'mobile' | 'desktop';
+export type DeviceMode = 'auto' | 'mobile' | 'desktop';
 
-function detectDeviceType() {
+function detectDeviceType(): DeviceType {
   if (typeof navigator === 'undefined') {
     return typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop';
   }
@@ -21,12 +22,26 @@ function detectDeviceType() {
   return 'desktop';
 }
 
-export function useDeviceType() {
-  const [deviceType, setDeviceType] = useState<DeviceType>(() => detectDeviceType());
+function getStoredMode(): DeviceMode {
+  if (typeof window === 'undefined') return 'auto';
+  const stored = localStorage.getItem('deviceMode');
+  if (stored === 'mobile' || stored === 'desktop') return stored;
+  return 'auto';
+}
 
+export function useDeviceType() {
+  const [mode, setMode] = useState<DeviceMode>(() => getStoredMode());
+  const [autoDetected, setAutoDetected] = useState<DeviceType>(() => detectDeviceType());
+
+  // The effective device type based on mode
+  const deviceType: DeviceType = mode === 'auto' ? autoDetected : mode;
+  const isMobile = deviceType === 'mobile';
+  const isDesktop = deviceType === 'desktop';
+
+  // Handle resize for auto-detection
   useEffect(() => {
     const handleResize = () => {
-      setDeviceType(detectDeviceType());
+      setAutoDetected(detectDeviceType());
     };
 
     window.addEventListener('resize', handleResize);
@@ -35,11 +50,31 @@ export function useDeviceType() {
     };
   }, []);
 
+  // Apply class to root element
   useEffect(() => {
     const root = document.documentElement;
     root.classList.remove('is-mobile', 'is-desktop');
     root.classList.add(deviceType === 'mobile' ? 'is-mobile' : 'is-desktop');
   }, [deviceType]);
 
-  return deviceType;
+  // Set device mode (auto, mobile, or desktop)
+  const setDeviceMode = useCallback((newMode: DeviceMode) => {
+    setMode(newMode);
+    if (typeof window !== 'undefined') {
+      if (newMode === 'auto') {
+        localStorage.removeItem('deviceMode');
+      } else {
+        localStorage.setItem('deviceMode', newMode);
+      }
+    }
+  }, []);
+
+  return {
+    deviceType,
+    isMobile,
+    isDesktop,
+    mode,
+    setDeviceMode,
+    autoDetected,
+  };
 }

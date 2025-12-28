@@ -65,7 +65,7 @@ export function QuickActions({ compact = false }: QuickActionsProps) {
           <button
             key={index}
             onClick={action.onClick}
-            className={`w-full p-4 bg-gradient-to-r ${action.color} text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center space-x-3`}
+            className={`action-btn btn-mobile w-full p-4 bg-gradient-to-r ${action.color} text-white rounded-lg font-medium hover:shadow-lg transition-all flex items-center space-x-3`}
           >
             <span className="text-xl">{action.icon}</span>
             <span>{action.label}</span>

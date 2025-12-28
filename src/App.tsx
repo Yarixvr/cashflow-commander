@@ -10,6 +10,8 @@ import { ThemeGallery } from "./components/ThemeGallery";
 import { useDeviceType } from "./hooks/useDeviceType";
 import { ProfilePage } from "./components/ProfilePage";
 import { ProfileAvatar } from "./components/ProfileAvatar";
+import { OnboardingTour } from "./components/OnboardingTour";
+import { useOnboarding } from "./hooks/useOnboarding";
 
 export default function App() {
   useDeviceType();
@@ -31,6 +33,7 @@ function AppContent() {
   const initializeCategories = useMutation(api.categories.initializeDefaults);
   const profile = useQuery(api.profiles.getMyProfile);
   const [activeView, setActiveView] = useState<"dashboard" | "themes" | "profile">("dashboard");
+  const { isOnboardingActive, completeOnboarding, skipOnboarding } = useOnboarding();
 
   useEffect(() => {
     initializeCategories();
@@ -120,6 +123,13 @@ function AppContent() {
         {activeView === "themes" && <ThemeGallery />}
         {activeView === "profile" && <ProfilePage />}
       </main>
+
+      {/* Onboarding Tour */}
+      <OnboardingTour
+        isActive={isOnboardingActive}
+        onComplete={completeOnboarding}
+        onSkip={skipOnboarding}
+      />
     </div>
   );
 }
