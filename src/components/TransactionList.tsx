@@ -1,5 +1,6 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { useTranslation } from "react-i18next";
 
 interface TransactionListProps {
   limit?: number;
@@ -7,6 +8,7 @@ interface TransactionListProps {
 }
 
 export function TransactionList({ limit, showHeader = false }: TransactionListProps) {
+  const { t, i18n } = useTranslation();
   const transactions = useQuery(api.transactions.list, { limit });
 
   if (!transactions) {
@@ -32,7 +34,7 @@ export function TransactionList({ limit, showHeader = false }: TransactionListPr
     <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-900 coral:border-[#fda4af] bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] emerald:bg-[#0f1f18] space:bg-[#2c2c2e] nova:bg-[#0f172a] navy:bg-[#16213d] coral:bg-[#fff1f2]">
       {showHeader && (
         <div className="p-6 border-b border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-800 coral:border-[#fb7185]">
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">Recent Transactions</h3>
+          <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">{t('transactions.recent')}</h3>
         </div>
       )}
       <div className="p-6">
@@ -41,8 +43,8 @@ export function TransactionList({ limit, showHeader = false }: TransactionListPr
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 oled:bg-gray-800 emerald:bg-emerald-800/70 space:bg-zinc-700 nova:bg-sky-800/70 navy:bg-[#1d4ed8]/40 coral:bg-[#fecdd3] rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">💳</span>
             </div>
-            <p className="text-slate-600 dark:text-slate-300 oled:text-gray-300 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c]">No transactions yet</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-300 coral:text-[#fb7185]">Add your first transaction to get started</p>
+            <p className="text-slate-600 dark:text-slate-300 oled:text-gray-300 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c]">{t('transactions.empty')}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-300 coral:text-[#fb7185]">{t('transactions.emptySubtitle')}</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -63,14 +65,14 @@ export function TransactionList({ limit, showHeader = false }: TransactionListPr
                       <span>•</span>
                       <span>{transaction.account?.name}</span>
                       <span>•</span>
-                      <span>{new Date(transaction.date).toLocaleDateString()}</span>
+                      <span>{new Date(transaction.date).toLocaleDateString(i18n.language)}</span>
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className={`font-semibold ${transaction.type === "income"
-                      ? "text-green-600 dark:text-green-400 oled:text-green-400 emerald:text-emerald-300 space:text-green-400 nova:text-emerald-300 navy:text-emerald-300 coral:text-[#be123c]"
-                      : "text-red-600 dark:text-red-400 oled:text-red-400 emerald:text-rose-400 space:text-red-400 nova:text-pink-300 navy:text-red-300 coral:text-[#be123c]"
+                    ? "text-green-600 dark:text-green-400 oled:text-green-400 emerald:text-emerald-300 space:text-green-400 nova:text-emerald-300 navy:text-emerald-300 coral:text-[#be123c]"
+                    : "text-red-600 dark:text-red-400 oled:text-red-400 emerald:text-rose-400 space:text-red-400 nova:text-pink-300 navy:text-red-300 coral:text-[#be123c]"
                     }`}>
                     {transaction.type === "income" ? "+" : "-"}${transaction.amount.toFixed(2)}
                   </p>

@@ -1,0 +1,193 @@
+{
+    "app": {
+        "title": "CashFlow Commander",
+        "tagline": "Maîtrisez votre argent. Dominez votre flux."
+    },
+    "nav": {
+        "dashboard": "Tableau de bord",
+        "themes": "Thèmes",
+        "profile": "Profil"
+    },
+    "tabs": {
+        "overview": "Aperçu",
+        "transactions": "Transactions",
+        "budgets": "Budgets",
+        "insights": "Analyses"
+    },
+    "auth": {
+        "signIn": "Connexion",
+        "signUp": "Inscription",
+        "email": "Email",
+        "password": "Mot de passe",
+        "anonymous": "Connexion invité",
+        "noAccount": "Pas de compte ?",
+        "hasAccount": "Vous avez déjà un compte ?",
+        "signUpInstead": "S'inscrire plutôt",
+        "signInInstead": "Se connecter plutôt",
+        "signOut": "Déconnexion",
+        "invalidPassword": "Mot de passe invalide. Veuillez réessayer.",
+        "signInError": "Impossible de se connecter, vouliez-vous vous inscrire ?",
+        "signUpError": "Impossible de s'inscrire, vouliez-vous vous connecter ?",
+        "emailPlaceholder": "Entrez votre email",
+        "passwordPlaceholder": "Entrez votre mot de passe"
+    },
+    "charts": {
+        "spendingByCategory": "Dépenses par Catégorie",
+        "last30Days": "30 derniers jours",
+        "noExpenses": "Aucune dépense à afficher",
+        "addExpenses": "Ajoutez des transactions pour voir la répartition"
+    },
+    "stats": {
+        "totalBalance": "Solde Total",
+        "monthlyIncome": "Revenus Mensuels",
+        "monthlyExpenses": "Dépenses Mensuelles",
+        "netFlow": "Flux Net"
+    },
+    "actions": {
+        "quickActions": "Actions Rapides",
+        "addTransaction": "Ajouter Transaction",
+        "addAccount": "Ajouter Compte",
+        "setBudget": "Définir Budget"
+    },
+    "transactions": {
+        "recent": "Transactions Récentes",
+        "empty": "Aucune transaction pour le moment",
+        "emptySubtitle": "Ajoutez votre première transaction pour commencer",
+        "add": "Ajouter Transaction",
+        "type": "Type",
+        "income": "Revenu",
+        "expense": "Dépense",
+        "amount": "Montant",
+        "description": "Description",
+        "category": "Catégorie",
+        "date": "Date",
+        "account": "Compte",
+        "selectAccount": "Sélectionner un compte",
+        "selectCategory": "Sélectionner une catégorie",
+        "enterDescription": "Entrer une description",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "success": "Transaction ajoutée avec succès",
+        "error": "Échec de l'ajout de la transaction",
+        "fillAll": "Veuillez remplir tous les champs"
+    },
+    "profile": {
+        "title": "Mon Profil",
+        "edit": "Modifier le Profil",
+        "username": "Nom d'utilisateur",
+        "avatarUrl": "URL de l'avatar",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "badges": "Badges",
+        "saving": "Enregistrement...",
+        "success": "Profil mis à jour avec succès !",
+        "error": "Échec de la mise à jour du profil",
+        "noUsername": "Aucun nom d'utilisateur défini"
+    },
+    "insights": {
+        "title": "Analyses Intelligentes",
+        "generate": "Générer",
+        "generating": "Génération...",
+        "clearAll": "Tout effacer",
+        "clearing": "Effacement...",
+        "empty": "Aucune analyse pour le moment",
+        "emptySubtitle": "Cliquez sur 'Générer' pour analyser vos transactions.",
+        "markRead": "Marquer comme lu"
+    },
+    "common": {
+        "loading": "Chargement...",
+        "error": "Une erreur est survenue",
+        "or": "ou"
+    },
+    "onboarding": {
+        "welcome": {
+            "title": "Bienvenue sur CashFlow Commander ! 🎉",
+            "description": "Laissez-nous vous faire visiter. Cette visite rapide vous aidera à maîtriser vos finances en un rien de temps."
+        },
+        "navigation": {
+            "title": "Navigation Facile 🧭",
+            "description": "Basculez entre votre Tableau de bord, les Thèmes et votre Profil depuis la barre de navigation supérieure."
+        },
+        "stats": {
+            "title": "Aperçu Financier 📊",
+            "description": "Suivez votre solde total, vos revenus, vos dépenses et votre flux net en un coup d'œil."
+        },
+        "quickActions": {
+            "title": "Actions Rapides ⚡",
+            "description": "Ajoutez rapidement des transactions, des comptes ou mettez à jour votre budget d'ici."
+        },
+        "insights": {
+            "title": "Analyses Intelligentes 🧠",
+            "description": "Obtenez une analyse alimentée par l'IA de vos habitudes de dépenses et des recommandations personnalisées."
+        },
+        "themes": {
+            "title": "Personnalisez votre Style 🎨",
+            "description": "Personnalisez votre expérience avec notre collection de thèmes. Essayez 'Emerald Noir' ou 'Ultra Blue Nova' !"
+        },
+        "complete": {
+            "title": "Tout est prêt ! ✨",
+            "description": "Vous êtes prêt à prendre le contrôle de votre flux d'argent. Profitez de CashFlow Commander !"
+        },
+        "next": "Suivant",
+        "back": "Retour",
+        "skip": "Passer",
+        "getStarted": "Commencer"
+    },
+    "accounts": {
+        "add": "Ajouter Compte",
+        "name": "Nom du Compte",
+        "type": "Type de Compte",
+        "currency": "Devise",
+        "balance": "Solde Initial",
+        "color": "Couleur",
+        "create": "Créer Compte",
+        "types": {
+            "checking": "Courant",
+            "savings": "Épargne",
+            "credit": "Carte de Crédit",
+            "investment": "Investissement"
+        },
+        "placeholders": {
+            "name": "Mon Compte Courant"
+        }
+    },
+    "budgets": {
+        "set": "Définir Budget",
+        "category": "Catégorie",
+        "period": "Période Budgétaire",
+        "amount": "Montant du Budget",
+        "create": "Créer Budget",
+        "periods": {
+            "weekly": "Hebdomadaire",
+            "monthly": "Mensuel",
+            "yearly": "Annuel"
+        },
+        "overview": "Aperçu du Budget",
+        "noBudgets": "Aucun budget défini",
+        "createMsg": "Créez des budgets pour suivre vos dépenses",
+        "remaining": "restant",
+        "over": "dépassé",
+        "used": "du budget utilisé",
+        "suffix": "budget"
+    },
+    "themesPage": {
+        "personalize": "Personnaliser",
+        "title": "Choisissez l'ambiance parfaite pour chaque appareil",
+        "subtitle": "Explorez des palettes immersives optimisées pour les écrans OLED, les ordinateurs portables et les téléphones. Choisissez un thème pour rafraîchir instantanément votre expérience.",
+        "active": "Actif",
+        "preview": "Aperçu",
+        "inUse": "Utilisé",
+        "tapToTry": "Appuyez pour essayer",
+        "footer": "Les paramètres de thème se synchronisent instantanément entre les pages. Des raccourcis clavier sont disponibles pour les utilisateurs avancés."
+    },
+    "themeDescriptions": {
+        "dark": "Thème sombre par défaut avec des accents bleus",
+        "light": "Interface propre et lumineuse",
+        "oled": "Parfait pour les écrans OLED - économise la batterie",
+        "navy": "Bleus sombres avec des détails à fort contraste",
+        "coral": "Coraux vibrants et reflets chauds",
+        "emerald": "Luxe sombre avec des verts émeraude riches",
+        "space": "Tons gris neutres sophistiqués",
+        "nova": "Bleu cosmique vibrant avec des accents électriques"
+    }
+}

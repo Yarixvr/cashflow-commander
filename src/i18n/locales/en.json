@@ -1,0 +1,197 @@
+{
+    "app": {
+        "title": "CashFlow Commander",
+        "tagline": "Master your money. Rule your flow."
+    },
+    "nav": {
+        "dashboard": "Dashboard",
+        "themes": "Themes",
+        "profile": "Profile"
+    },
+    "tabs": {
+        "overview": "Overview",
+        "transactions": "Transactions",
+        "budgets": "Budgets",
+        "insights": "Insights"
+    },
+    "auth": {
+        "signIn": "Sign in",
+        "signUp": "Sign up",
+        "email": "Email",
+        "password": "Password",
+        "anonymous": "Sign in anonymously",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signUpInstead": "Sign up instead",
+        "signInInstead": "Sign in instead",
+        "signOut": "Sign out",
+        "invalidPassword": "Invalid password. Please try again.",
+        "signInError": "Could not sign in, did you mean to sign up?",
+        "signUpError": "Could not sign up, did you mean to sign in?",
+        "emailPlaceholder": "Enter your email",
+        "passwordPlaceholder": "Enter your password"
+    },
+    "charts": {
+        "spendingByCategory": "Spending by Category",
+        "last30Days": "Last 30 days",
+        "noExpenses": "No expenses to show",
+        "addExpenses": "Add some transactions to see your spending breakdown"
+    },
+    "stats": {
+        "totalBalance": "Total Balance",
+        "monthlyIncome": "Monthly Income",
+        "monthlyExpenses": "Monthly Expenses",
+        "netFlow": "Net Flow"
+    },
+    "actions": {
+        "quickActions": "Quick Actions",
+        "addTransaction": "Add Transaction",
+        "addAccount": "Add Account",
+        "setBudget": "Set Budget"
+    },
+    "transactions": {
+        "recent": "Recent Transactions",
+        "empty": "No transactions yet",
+        "emptySubtitle": "Add your first transaction to get started",
+        "add": "Add Transaction",
+        "type": "Type",
+        "income": "Income",
+        "expense": "Expense",
+        "amount": "Amount",
+        "description": "Description",
+        "category": "Category",
+        "date": "Date",
+        "account": "Account",
+        "selectAccount": "Select an account",
+        "selectCategory": "Select a category",
+        "enterDescription": "Enter description",
+        "cancel": "Cancel",
+        "save": "Add Transaction",
+        "success": "Transaction added successfully",
+        "error": "Failed to add transaction",
+        "fillAll": "Please fill in all fields"
+    },
+    "profile": {
+        "title": "My Profile",
+        "edit": "Edit Profile",
+        "username": "Username",
+        "avatarUrl": "Profile Picture URL",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "badges": "Badges",
+        "saving": "Saving...",
+        "success": "Profile updated successfully!",
+        "error": "Failed to update profile",
+        "noUsername": "No username set"
+    },
+    "insights": {
+        "title": "Smart Insights",
+        "generate": "Generate",
+        "generating": "Generating...",
+        "clearAll": "Clear all",
+        "clearing": "Clearing...",
+        "empty": "No insights yet",
+        "emptySubtitle": "Click 'Generate' to analyze your transactions.",
+        "markRead": "Mark as read",
+        "generatedSuccess": "Insights generated successfully!",
+        "error": "Failed to generate insights",
+        "clearedSuccess": "All insights cleared!",
+        "clearError": "Failed to clear insights"
+    },
+    "common": {
+        "loading": "Loading...",
+        "error": "An error occurred",
+        "or": "or"
+    },
+    "onboarding": {
+        "welcome": {
+            "title": "Welcome to CashFlow Commander! 🎉",
+            "description": "Let us show you around. This quick tour will help you master your finances in no time."
+        },
+        "navigation": {
+            "title": "Easy Navigation 🧭",
+            "description": "Switch between your Dashboard, Themes, and Profile settings from the top navigation bar."
+        },
+        "stats": {
+            "title": "Financial Overview 📊",
+            "description": "Track your total balance, income, expenses, and net flow at a glance."
+        },
+        "quickActions": {
+            "title": "Quick Actions ⚡",
+            "description": "Rapidly add transactions, accounts, or update your budget from here."
+        },
+        "insights": {
+            "title": "Smart Insights 🧠",
+            "description": "Get AI-powered analysis of your spending habits and personalized recommendations."
+        },
+        "themes": {
+            "title": "Customize Your Look 🎨",
+            "description": "Personalize your experience with our beautiful theme collection. Try 'Emerald Noir' or 'Ultra Blue Nova'!"
+        },
+        "complete": {
+            "title": "You're All Set! ✨",
+            "description": "You're ready to take command of your cash flow. Enjoy using CashFlow Commander!"
+        },
+        "next": "Next",
+        "back": "Back",
+        "skip": "Skip",
+        "getStarted": "Get Started"
+    },
+    "accounts": {
+        "add": "Add Account",
+        "name": "Account Name",
+        "type": "Account Type",
+        "currency": "Currency",
+        "balance": "Initial Balance",
+        "color": "Color",
+        "create": "Create Account",
+        "types": {
+            "checking": "Checking",
+            "savings": "Savings",
+            "credit": "Credit Card",
+            "investment": "Investment"
+        },
+        "placeholders": {
+            "name": "My Checking Account"
+        }
+    },
+    "budgets": {
+        "set": "Set Budget",
+        "category": "Category",
+        "period": "Budget Period",
+        "amount": "Budget Amount",
+        "create": "Create Budget",
+        "periods": {
+            "weekly": "Weekly",
+            "monthly": "Monthly",
+            "yearly": "Yearly"
+        },
+        "overview": "Budget Overview",
+        "noBudgets": "No budgets set",
+        "createMsg": "Create budgets to track your spending",
+        "remaining": "remaining",
+        "over": "over",
+        "used": "of budget used",
+        "suffix": "budget"
+    },
+    "themesPage": {
+        "personalize": "Personalize",
+        "title": "Choose the perfect vibe for every device",
+        "subtitle": "Explore immersive palettes optimized for OLED screens, laptops, and phones. Pick a theme to instantly refresh your experience with buttery smooth transitions.",
+        "active": "Active",
+        "preview": "Preview",
+        "inUse": "In Use",
+        "tapToTry": "Tap to try",
+        "footer": "Theme settings sync instantly across pages. Keyboard shortcuts are available for power users."
+    },
+    "themeDescriptions": {
+        "dark": "Default dark theme with blue accents",
+        "light": "Clean and bright interface",
+        "oled": "Perfect for OLED displays - saves battery",
+        "navy": "Moody blues with high contrast details",
+        "coral": "Vibrant corals and warm highlights",
+        "emerald": "Dark luxury with rich emerald greens",
+        "space": "Sophisticated neutral grey tones",
+        "nova": "Vibrant cosmic blue with electric accents"
+    }
+}

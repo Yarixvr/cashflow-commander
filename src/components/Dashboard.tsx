@@ -8,7 +8,10 @@ import { QuickActions } from "./QuickActions";
 import { InsightCards } from "./InsightCards";
 import { useState } from "react";
 
+import { useTranslation } from "react-i18next";
+
 export function Dashboard() {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState("overview");
   const accounts = useQuery(api.accounts.list);
   const totalBalance = useQuery(api.accounts.getTotalBalance);
@@ -17,10 +20,10 @@ export function Dashboard() {
   const insights = useQuery(api.insights.list);
 
   const tabs = [
-    { id: "overview", label: "Overview", icon: "📊" },
-    { id: "transactions", label: "Transactions", icon: "💳" },
-    { id: "budgets", label: "Budgets", icon: "🎯" },
-    { id: "insights", label: "Insights", icon: "💡" },
+    { id: "overview", label: t('tabs.overview'), icon: "📊" },
+    { id: "transactions", label: t('tabs.transactions'), icon: "💳" },
+    { id: "budgets", label: t('tabs.budgets'), icon: "🎯" },
+    { id: "insights", label: t('tabs.insights'), icon: "💡" },
   ];
 
   return (
@@ -33,8 +36,8 @@ export function Dashboard() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all-fast hover:scale-105 active:scale-95 ${activeTab === tab.id
-                  ? "bg-blue-600 dark:bg-blue-500 oled:bg-blue-600 emerald:bg-emerald-600 space:bg-zinc-500 nova:bg-sky-600 text-white shadow-sm animate-pulse-glow"
-                  : "text-slate-600 dark:text-slate-300 oled:text-gray-400 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-300 hover:text-slate-800 dark:hover:text-slate-100 oled:hover:text-white emerald:hover:text-emerald-100 space:hover:text-zinc-100 nova:hover:text-sky-100 hover:bg-slate-50 dark:hover:bg-slate-700 oled:hover:bg-gray-900 emerald:hover:bg-emerald-800 space:hover:bg-zinc-700 nova:hover:bg-sky-900"
+                ? "bg-blue-600 dark:bg-blue-500 oled:bg-blue-600 emerald:bg-emerald-600 space:bg-zinc-500 nova:bg-sky-600 text-white shadow-sm animate-pulse-glow"
+                : "text-slate-600 dark:text-slate-300 oled:text-gray-400 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-300 hover:text-slate-800 dark:hover:text-slate-100 oled:hover:text-white emerald:hover:text-emerald-100 space:hover:text-zinc-100 nova:hover:text-sky-100 hover:bg-slate-50 dark:hover:bg-slate-700 oled:hover:bg-gray-900 emerald:hover:bg-emerald-800 space:hover:bg-zinc-700 nova:hover:bg-sky-900"
                 }`}
             >
               <span>{tab.icon}</span>

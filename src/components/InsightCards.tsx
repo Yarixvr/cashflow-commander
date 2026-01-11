@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { useMutation, useAction } from "convex/react";
+import { useMutation, useAction, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface Insight {
   _id: string;
@@ -13,7 +15,7 @@ interface Insight {
 }
 
 interface InsightCardsProps {
-  insights: Insight[];
+  insights?: Insight[]; // Make optional or matching usage
   detailed?: boolean;
 }
 
@@ -99,9 +101,11 @@ const INSIGHT_CONFIG: Record<InsightType, InsightConfig> = {
   },
 };
 
-export function InsightCards({ insights, detailed = false }: InsightCardsProps) {
+export function InsightCards() {
+  const { t, i18n } = useTranslation();
+  const insights = useQuery(api.insights.list);
   const markAsRead = useMutation(api.insights.markAsRead);
-  const generateInsights = useAction(api.insights.generateInsights);
+  const generateInsights = useAction(api.insights.generate);
   const clearAllInsights = useMutation(api.insights.clearAll);
   const pruneStaleInsights = useMutation(api.insights.pruneStale);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -113,24 +117,25 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
     });
   }, [pruneStaleInsights]);
 
-  const handleMarkAsRead = async (insightId: string) => {
-    if (!insightId) return;
-    await markAsRead({ id: insightId as any });
-  };
-
-  const handleGenerateInsights = async () => {
-    setIsGenerating(true);
+  const handleGenerate = async () => {
     try {
-      await generateInsights();
+      setIsGenerating(true);
+      await generateInsights({});
+      toast.success(t('insights.generatedSuccess') || "Insights generated!");
+    } catch (error) {
+      toast.error(t('insights.error') || "Failed to generate insights");
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleClearInsights = async () => {
+  const handleClear = async () => {
     setIsClearing(true);
     try {
       await clearAllInsights();
+      toast.success(t('insights.clearedSuccess') || "All insights cleared!");
+    } catch (error) {
+      toast.error(t('insights.clearError') || "Failed to clear insights");
     } finally {
       setIsClearing(false);
     }
@@ -145,15 +150,13 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
     if (type in INSIGHT_CONFIG) {
       return type as InsightType;
     }
-
     return INSIGHT_TYPE_MAP[type];
   };
 
-  const normalizedInsights: EnrichedInsight[] = insights
+  const normalizedInsights: EnrichedInsight[] = (insights || [])
     .map((insight) => {
       const normalized = normalizeType(insight.type);
       const config = normalized ? INSIGHT_CONFIG[normalized] : undefined;
-
       return {
         ...insight,
         normalizedType: normalized,
@@ -163,29 +166,30 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
     })
     .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
 
-  const insightsToDisplay = detailed
-    ? normalizedInsights
-    : normalizedInsights.slice(0, 6);
+  const insightsToDisplay = normalizedInsights;
 
   return (
     <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-900 coral:border-[#fda4af] bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] emerald:bg-[#0f1f18] space:bg-[#2c2c2e] nova:bg-[#0f172a] navy:bg-[#16213d] coral:bg-[#fff1f2]">
       <div className="p-6 border-b border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-800 coral:border-[#fb7185] flex justify-between items-center gap-3">
-        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">Smart Insights</h3>
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">
+          {t('insights.title') || "Smart Insights"}
+        </h3>
         <div className="flex items-center gap-2">
           <button
-            onClick={handleGenerateInsights}
+            onClick={handleGenerate}
             disabled={isGenerating || isClearing}
             className={`insight-btn px-3 py-1.5 bg-blue-100 dark:bg-blue-900/30 oled:bg-blue-900/40 emerald:bg-emerald-700/40 space:bg-zinc-600 nova:bg-sky-800/50 navy:bg-blue-900/40 coral:bg-[#fecdd3] text-blue-600 dark:text-blue-400 oled:text-blue-300 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c] rounded-lg text-sm font-medium hover:bg-blue-200 dark:hover:bg-blue-900/50 oled:hover:bg-blue-900/60 emerald:hover:bg-emerald-700/60 space:hover:bg-zinc-500 nova:hover:bg-sky-800/70 navy:hover:bg-blue-900/60 coral:hover:bg-[#fbcfe8] disabled:cursor-not-allowed disabled:opacity-60 ${isGenerating ? 'insight-btn-loading' : ''}`}
           >
-            {isGenerating ? "Generating..." : "Generate"}
+            {isGenerating ? t('insights.generating') : t('insights.generate')}
           </button>
-          {insights.length > 0 && (
+
+          {insights && insights.length > 0 && (
             <button
-              onClick={handleClearInsights}
+              onClick={handleClear}
               disabled={isGenerating || isClearing}
               className={`insight-btn px-3 py-1.5 bg-red-100 dark:bg-red-900/30 oled:bg-red-900/40 emerald:bg-red-900/40 space:bg-red-900/40 nova:bg-red-900/40 navy:bg-red-900/40 coral:bg-red-200 text-red-600 dark:text-red-400 oled:text-red-300 emerald:text-red-300 space:text-red-300 nova:text-red-300 navy:text-red-300 coral:text-red-700 rounded-lg text-sm font-medium hover:bg-red-200 dark:hover:bg-red-900/50 oled:hover:bg-red-900/60 emerald:hover:bg-red-900/60 space:hover:bg-red-900/60 nova:hover:bg-red-900/60 navy:hover:bg-red-900/60 coral:hover:bg-red-300 disabled:cursor-not-allowed disabled:opacity-60 ${isClearing ? 'insight-btn-loading' : ''}`}
             >
-              {isClearing ? "Clearing..." : "Clear all"}
+              {isClearing ? t('insights.clearing') : t('insights.clearAll')}
             </button>
           )}
         </div>
@@ -237,15 +241,15 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
                     <div className="mt-auto flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 oled:text-gray-500 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-300 coral:text-[#fb7185]">
                       <span>
                         {insight.createdAt
-                          ? new Date(insight.createdAt).toLocaleDateString()
+                          ? new Date(insight.createdAt).toLocaleDateString(i18n.language)
                           : ""}
                       </span>
                       {!insight.isRead && (
                         <button
-                          onClick={() => handleMarkAsRead(insight._id)}
+                          onClick={() => markAsRead({ id: insight._id })}
                           className="font-medium text-blue-600 transition-colors hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 oled:text-blue-300 oled:hover:text-blue-200 emerald:text-emerald-300 emerald:hover:text-emerald-200 space:text-zinc-300 space:hover:text-zinc-200 nova:text-sky-300 nova:hover:text-sky-200 navy:text-blue-200 navy:hover:text-blue-100 coral:text-[#be123c] coral:hover:text-[#9f1239]"
                         >
-                          Mark as read
+                          {t('insights.markRead')}
                         </button>
                       )}
                     </div>
@@ -259,10 +263,10 @@ export function InsightCards({ insights, detailed = false }: InsightCardsProps) 
             <span className="text-3xl">🧠</span>
             <div className="space-y-1">
               <p className="text-sm font-medium text-slate-700 dark:text-slate-200 oled:text-gray-200 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-100 coral:text-[#7f1d1d]">
-                No insights yet
+                {t('insights.empty')}
               </p>
               <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-200 coral:text-[#be123c]">
-                Click "Generate insights" to analyze your latest transactions.
+                {t('insights.emptySubtitle')}
               </p>
             </div>
           </div>

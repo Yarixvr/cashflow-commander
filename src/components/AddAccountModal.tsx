@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface AddAccountModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AddAccountModalProps {
 }
 
 export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState("");
   const [type, setType] = useState<"checking" | "savings" | "credit" | "investment">("checking");
   const [currency, setCurrency] = useState("USD");
@@ -18,10 +20,10 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
   const createAccount = useMutation(api.accounts.create);
 
   const accountTypes = [
-    { value: "checking", label: "Checking", icon: "🏦" },
-    { value: "savings", label: "Savings", icon: "💰" },
-    { value: "credit", label: "Credit Card", icon: "💳" },
-    { value: "investment", label: "Investment", icon: "📈" },
+    { value: "checking", label: t('accounts.types.checking'), icon: "🏦" },
+    { value: "savings", label: t('accounts.types.savings'), icon: "💰" },
+    { value: "credit", label: t('accounts.types.credit'), icon: "💳" },
+    { value: "investment", label: t('accounts.types.investment'), icon: "📈" },
   ];
 
   const colors = [
@@ -31,9 +33,9 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !balance) {
-      toast.error("Please fill in all fields");
+      toast.error(t('transactions.fillAll'));
       return;
     }
 
@@ -45,16 +47,17 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
         balance: parseFloat(balance),
         color,
       });
-      
-      toast.success("Account created successfully");
+
+      toast.success(t('accounts.create') + " " + t('transactions.success').replace('Transaction', 'Account')); // Fallback logic or specific key if needed
+      // Better to have specific success message
       onClose();
-      
+
       // Reset form
       setName("");
       setBalance("");
       setColor("#3B82F6");
     } catch (error) {
-      toast.error("Failed to create account");
+      toast.error(t('transactions.error').replace('Transaction', 'Account'));
     }
   };
 
@@ -65,7 +68,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full">
         <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Add Account</h2>
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">{t('accounts.add')}</h2>
             <button
               onClick={onClose}
               className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
@@ -78,31 +81,30 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Account Name */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Account Name</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('accounts.name')}</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 dark:focus:border-blue-400"
-              placeholder="My Checking Account"
+              placeholder={t('accounts.placeholders.name')}
               required
             />
           </div>
 
           {/* Account Type */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Account Type</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('accounts.type')}</label>
             <div className="grid grid-cols-2 gap-2">
               {accountTypes.map((accountType) => (
                 <button
                   key={accountType.value}
                   type="button"
                   onClick={() => setType(accountType.value as any)}
-                  className={`p-3 rounded-lg border-2 transition-colors ${
-                    type === accountType.value
+                  className={`p-3 rounded-lg border-2 transition-colors ${type === accountType.value
                       ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
                       : "border-slate-200 dark:border-slate-600 hover:border-slate-300 dark:hover:border-slate-500 dark:text-slate-300"
-                  }`}
+                    }`}
                 >
                   <div className="text-lg mb-1">{accountType.icon}</div>
                   <div className="text-sm font-medium">{accountType.label}</div>
@@ -113,7 +115,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Currency */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Currency</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('accounts.currency')}</label>
             <select
               value={currency}
               onChange={(e) => setCurrency(e.target.value)}
@@ -128,7 +130,7 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Initial Balance */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Initial Balance</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('accounts.balance')}</label>
             <input
               type="number"
               step="0.01"
@@ -142,16 +144,15 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
 
           {/* Color */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Color</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">{t('accounts.color')}</label>
             <div className="flex space-x-2">
               {colors.map((colorOption) => (
                 <button
                   key={colorOption}
                   type="button"
                   onClick={() => setColor(colorOption)}
-                  className={`w-8 h-8 rounded-full border-2 ${
-                    color === colorOption ? "border-slate-400 dark:border-slate-300" : "border-slate-200 dark:border-slate-600"
-                  }`}
+                  className={`w-8 h-8 rounded-full border-2 ${color === colorOption ? "border-slate-400 dark:border-slate-300" : "border-slate-200 dark:border-slate-600"
+                    }`}
                   style={{ backgroundColor: colorOption }}
                 />
               ))}
@@ -165,13 +166,13 @@ export function AddAccountModal({ isOpen, onClose }: AddAccountModalProps) {
               onClick={onClose}
               className="flex-1 py-2 px-4 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             >
-              Cancel
+              {t('transactions.cancel')}
             </button>
             <button
               type="submit"
               className="flex-1 py-2 px-4 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
-              Create Account
+              {t('accounts.create')}
             </button>
           </div>
         </form>

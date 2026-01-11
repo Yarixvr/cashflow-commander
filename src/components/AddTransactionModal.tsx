@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface AddTransactionModalProps {
   isOpen: boolean;
@@ -9,6 +10,7 @@ interface AddTransactionModalProps {
 }
 
 export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProps) {
+  const { t } = useTranslation();
   const [type, setType] = useState<"income" | "expense">("expense");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
@@ -22,9 +24,9 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!accountId || !amount || !description || !category) {
-      toast.error("Please fill in all fields");
+      toast.error(t('transactions.fillAll'));
       return;
     }
 
@@ -37,17 +39,17 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
         category,
         date: new Date(date).getTime(),
       });
-      
-      toast.success("Transaction added successfully");
+
+      toast.success(t('transactions.success'));
       onClose();
-      
+
       // Reset form
       setAmount("");
       setDescription("");
       setCategory("");
       setDate(new Date().toISOString().split('T')[0]);
     } catch (error) {
-      toast.error("Failed to add transaction");
+      toast.error(t('transactions.error'));
     }
   };
 
@@ -58,7 +60,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
       <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6 border-b border-slate-200 dark:border-slate-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">Add Transaction</h2>
+            <h2 className="text-xl font-semibold text-slate-800 dark:text-slate-100">{t('transactions.add')}</h2>
             <button
               onClick={onClose}
               className="text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-2xl"
@@ -71,43 +73,41 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Type Selection */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Type</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.type')}</label>
             <div className="flex space-x-2">
               <button
                 type="button"
                 onClick={() => setType("expense")}
-                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                  type === "expense"
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${type === "expense"
                     ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-2 border-red-200 dark:border-red-700"
                     : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
-                }`}
+                  }`}
               >
-                📉 Expense
+                📉 {t('transactions.expense')}
               </button>
               <button
                 type="button"
                 onClick={() => setType("income")}
-                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${
-                  type === "income"
+                className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${type === "income"
                     ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-2 border-green-200 dark:border-green-700"
                     : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
-                }`}
+                  }`}
               >
-                📈 Income
+                📈 {t('transactions.income')}
               </button>
             </div>
           </div>
 
           {/* Account Selection */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Account</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.account')}</label>
             <select
               value={accountId}
               onChange={(e) => setAccountId(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              <option value="">Select an account</option>
+              <option value="">{t('transactions.selectAccount')}</option>
               {accounts?.map((account) => (
                 <option key={account._id} value={account._id}>
                   {account.name} (${account.balance.toFixed(2)})
@@ -118,7 +118,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
 
           {/* Amount */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Amount</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.amount')}</label>
             <input
               type="number"
               step="0.01"
@@ -132,14 +132,14 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Category</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.category')}</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               required
             >
-              <option value="">Select a category</option>
+              <option value="">{t('transactions.selectCategory')}</option>
               {categories?.map((cat) => (
                 <option key={cat._id} value={cat.name}>
                   {cat.icon} {cat.name}
@@ -150,20 +150,20 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
 
           {/* Description */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Description</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.description')}</label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter description"
+              placeholder={t('transactions.enterDescription')}
               required
             />
           </div>
 
           {/* Date */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">Date</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">{t('transactions.date')}</label>
             <input
               type="date"
               value={date}
@@ -180,13 +180,13 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
               onClick={onClose}
               className="flex-1 py-2 px-4 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             >
-              Cancel
+              {t('transactions.cancel')}
             </button>
             <button
               type="submit"
               className="flex-1 py-2 px-4 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
-              Add Transaction
+              {t('transactions.save')}
             </button>
           </div>
         </form>

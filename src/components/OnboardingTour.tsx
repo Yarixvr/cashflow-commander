@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TourStep {
     id: string;
-    title: string;
-    description: string;
-    targetSelector: string | null; // null for welcome/complete screens
+    titleKey: string;
+    descriptionKey: string;
+    targetSelector: string | null;
     position: 'top' | 'bottom' | 'left' | 'right' | 'center';
     icon: string;
 }
@@ -12,56 +13,56 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
     {
         id: 'welcome',
-        title: 'Welcome to CashFlow Commander! 🎉',
-        description: 'Let us show you around. This quick tour will help you master your finances in no time.',
+        titleKey: 'onboarding.welcome.title',
+        descriptionKey: 'onboarding.welcome.description',
         targetSelector: null,
         position: 'center',
         icon: '👋',
     },
     {
         id: 'navigation',
-        title: 'Navigation Tabs',
-        description: 'Switch between different views: Overview for a quick glance, Transactions for details, Budgets to set limits, and Insights for smart tips.',
+        titleKey: 'onboarding.navigation.title',
+        descriptionKey: 'onboarding.navigation.description',
         targetSelector: 'nav',
         position: 'bottom',
         icon: '🧭',
     },
     {
         id: 'stats',
-        title: 'Your Financial Stats',
-        description: 'See your total balance, monthly income, expenses, and net flow at a glance. These update automatically as you add transactions.',
+        titleKey: 'onboarding.stats.title',
+        descriptionKey: 'onboarding.stats.description',
         targetSelector: '.stats-card',
         position: 'bottom',
         icon: '📊',
     },
     {
         id: 'quick-actions',
-        title: 'Quick Actions',
-        description: 'Add transactions, accounts, or budgets with one click. These shortcuts make managing your finances super fast!',
+        titleKey: 'onboarding.quickActions.title',
+        descriptionKey: 'onboarding.quickActions.description',
         targetSelector: '.action-btn',
         position: 'left',
         icon: '⚡',
     },
     {
         id: 'insights',
-        title: 'Smart Insights',
-        description: 'AI-powered insights analyze your spending patterns and give you personalized tips to save more money.',
+        titleKey: 'onboarding.insights.title',
+        descriptionKey: 'onboarding.insights.description',
         targetSelector: '.insight-card',
         position: 'top',
         icon: '🧠',
     },
     {
         id: 'themes',
-        title: 'Beautiful Themes',
-        description: 'Personalize your experience! Click on "Themes" to choose from 8 stunning color themes including dark mode.',
-        targetSelector: 'button:has-text("Themes"), [class*="Themes"]',
+        titleKey: 'onboarding.themes.title',
+        descriptionKey: 'onboarding.themes.description',
+        targetSelector: 'button[data-id="themes"], nav button',
         position: 'bottom',
         icon: '🎨',
     },
     {
         id: 'complete',
-        title: "You're All Set! 🚀",
-        description: "You're ready to take control of your finances. Start by adding your first transaction or account!",
+        titleKey: 'onboarding.complete.title',
+        descriptionKey: 'onboarding.complete.description',
         targetSelector: null,
         position: 'center',
         icon: '✨',
@@ -75,48 +76,91 @@ interface OnboardingTourProps {
 }
 
 export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourProps) {
+    const { t } = useTranslation();
     const [currentStep, setCurrentStep] = useState(0);
     const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
     const tooltipRef = useRef<HTMLDivElement>(null);
+    const prevActiveRef = useRef(isActive);
+    const retryCountRef = useRef(0);
+    const maxRetries = 3;
 
     const step = TOUR_STEPS[currentStep];
     const isFirstStep = currentStep === 0;
     const isLastStep = currentStep === TOUR_STEPS.length - 1;
     const progress = ((currentStep + 1) / TOUR_STEPS.length) * 100;
 
-    // Find and measure target element
+    // Reset step when tour becomes active
+    useEffect(() => {
+        if (isActive && !prevActiveRef.current) {
+            setCurrentStep(0);
+            retryCountRef.current = 0;
+        }
+        prevActiveRef.current = isActive;
+    }, [isActive]);
+
+    // Check for mobile viewport
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 640);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Find and measure target element with retry logic
     useEffect(() => {
         if (!isActive || !step.targetSelector) {
             setTargetRect(null);
+            retryCountRef.current = 0;
             return;
         }
 
         const findTarget = () => {
-            // Try multiple selector strategies
             let target: Element | null = null;
 
-            // Direct selector
-            target = document.querySelector(step.targetSelector!);
+            try {
+                // Direct selector
+                target = document.querySelector(step.targetSelector!);
 
-            // Fallback: find by class contains
-            if (!target && step.targetSelector!.includes('.')) {
-                const className = step.targetSelector!.replace('.', '');
-                target = document.querySelector(`[class*="${className}"]`);
+                // Fallback: find by class contains
+                if (!target && step.targetSelector!.includes('.')) {
+                    const className = step.targetSelector!.replace('.', '');
+                    target = document.querySelector(`[class*="${className}"]`);
+                }
+            } catch (e) {
+                console.warn('Invalid selector in onboarding tour:', step.targetSelector);
+                return false;
             }
 
             if (target) {
                 const rect = target.getBoundingClientRect();
-                setTargetRect(rect);
-            } else {
-                setTargetRect(null);
+                if (rect.width > 0 && rect.height > 0) {
+                    setTargetRect(rect);
+                    retryCountRef.current = 0;
+                    return true;
+                }
             }
+
+            return false;
         };
 
-        // Initial find
-        findTarget();
+        if (!findTarget()) {
+            const retryInterval = setInterval(() => {
+                if (findTarget() || retryCountRef.current >= maxRetries) {
+                    clearInterval(retryInterval);
+                    if (retryCountRef.current >= maxRetries) {
+                        setTargetRect(null);
+                    }
+                }
+                retryCountRef.current++;
+            }, 500);
 
-        // Re-find on resize/scroll
+            return () => clearInterval(retryInterval);
+        }
+
         const handleUpdate = () => findTarget();
         window.addEventListener('resize', handleUpdate);
         window.addEventListener('scroll', handleUpdate);
@@ -132,6 +176,7 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
             onComplete();
         } else {
             setIsAnimating(true);
+            retryCountRef.current = 0;
             setTimeout(() => {
                 setCurrentStep(prev => prev + 1);
                 setIsAnimating(false);
@@ -142,6 +187,7 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
     const goToPrev = useCallback(() => {
         if (!isFirstStep) {
             setIsAnimating(true);
+            retryCountRef.current = 0;
             setTimeout(() => {
                 setCurrentStep(prev => prev - 1);
                 setIsAnimating(false);
@@ -165,9 +211,9 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
 
     if (!isActive) return null;
 
-    // Calculate tooltip position
+    // Calculate tooltip position with mobile-aware clamping
     const getTooltipPosition = () => {
-        if (!targetRect || step.position === 'center') {
+        if (!targetRect || step.position === 'center' || isMobile) {
             return {
                 top: '50%',
                 left: '50%',
@@ -176,30 +222,31 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
         }
 
         const padding = 20;
-        const tooltipWidth = 360;
+        const tooltipWidth = Math.min(360, window.innerWidth - 40);
         const tooltipHeight = 200;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        let top: number;
+        let left: number;
 
         switch (step.position) {
             case 'bottom':
-                return {
-                    top: `${targetRect.bottom + padding}px`,
-                    left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding))}px`,
-                };
+                top = Math.min(targetRect.bottom + padding, viewportHeight - tooltipHeight - padding);
+                left = Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, viewportWidth - tooltipWidth - padding));
+                break;
             case 'top':
-                return {
-                    top: `${targetRect.top - tooltipHeight - padding}px`,
-                    left: `${Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, window.innerWidth - tooltipWidth - padding))}px`,
-                };
+                top = Math.max(padding, targetRect.top - tooltipHeight - padding);
+                left = Math.max(padding, Math.min(targetRect.left + targetRect.width / 2 - tooltipWidth / 2, viewportWidth - tooltipWidth - padding));
+                break;
             case 'left':
-                return {
-                    top: `${targetRect.top + targetRect.height / 2 - tooltipHeight / 2}px`,
-                    left: `${targetRect.left - tooltipWidth - padding}px`,
-                };
+                top = Math.max(padding, Math.min(targetRect.top + targetRect.height / 2 - tooltipHeight / 2, viewportHeight - tooltipHeight - padding));
+                left = Math.max(padding, targetRect.left - tooltipWidth - padding);
+                break;
             case 'right':
-                return {
-                    top: `${targetRect.top + targetRect.height / 2 - tooltipHeight / 2}px`,
-                    left: `${targetRect.right + padding}px`,
-                };
+                top = Math.max(padding, Math.min(targetRect.top + targetRect.height / 2 - tooltipHeight / 2, viewportHeight - tooltipHeight - padding));
+                left = Math.min(targetRect.right + padding, viewportWidth - tooltipWidth - padding);
+                break;
             default:
                 return {
                     top: '50%',
@@ -207,11 +254,16 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
                     transform: 'translate(-50%, -50%)',
                 };
         }
+
+        return {
+            top: `${top}px`,
+            left: `${left}px`,
+        };
     };
 
     // Calculate spotlight clip path
     const getSpotlightClipPath = () => {
-        if (!targetRect) return 'none';
+        if (!targetRect || isMobile) return 'none';
 
         const padding = 8;
         const x = targetRect.left - padding;
@@ -220,7 +272,6 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
         const height = targetRect.height + padding * 2;
         const radius = 12;
 
-        // Create a path that covers the whole screen except the spotlight area
         return `polygon(
       0% 0%, 
       0% 100%, 
@@ -245,13 +296,13 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
             <div
                 className="absolute inset-0 bg-black/80 transition-all duration-500"
                 style={{
-                    clipPath: targetRect ? getSpotlightClipPath() : 'none',
+                    clipPath: targetRect && !isMobile ? getSpotlightClipPath() : 'none',
                 }}
                 onClick={onSkip}
             />
 
-            {/* Spotlight ring effect */}
-            {targetRect && (
+            {/* Spotlight ring effect - hide on mobile or when no target */}
+            {targetRect && !isMobile && (
                 <div
                     className="absolute pointer-events-none tour-spotlight-ring"
                     style={{
@@ -264,14 +315,14 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
                 />
             )}
 
-            {/* Tooltip */}
+            {/* Tooltip - responsive width */}
             <div
                 ref={tooltipRef}
-                className={`absolute w-[360px] bg-white dark:bg-slate-800 oled:bg-gray-900 emerald:bg-emerald-900 space:bg-zinc-800 nova:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-600 oled:border-gray-700 emerald:border-emerald-600 space:border-zinc-600 nova:border-sky-700 overflow-hidden tour-tooltip ${isAnimating ? 'tour-tooltip-exit' : 'tour-tooltip-enter'}`}
+                className={`absolute w-[90vw] max-w-[360px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden tour-tooltip ${isAnimating ? 'tour-tooltip-exit' : 'tour-tooltip-enter'}`}
                 style={getTooltipPosition()}
             >
                 {/* Progress bar */}
-                <div className="h-1 bg-slate-200 dark:bg-slate-700">
+                <div className="h-1 bg-slate-700">
                     <div
                         className="h-full bg-gradient-to-r from-blue-500 to-teal-500 transition-all duration-500"
                         style={{ width: `${progress}%` }}
@@ -279,67 +330,67 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
                 </div>
 
                 {/* Content */}
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                     {/* Icon */}
-                    <div className="text-4xl mb-4 tour-icon">{step.icon}</div>
+                    <div className="text-3xl sm:text-4xl mb-3 sm:mb-4 tour-icon">{step.icon}</div>
 
                     {/* Title */}
-                    <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">
-                        {step.title}
+                    <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
+                        {t(step.titleKey)}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6">
-                        {step.description}
+                    <p className="text-slate-300 text-sm leading-relaxed mb-4 sm:mb-6">
+                        {t(step.descriptionKey)}
                     </p>
 
                     {/* Navigation */}
                     <div className="flex items-center justify-between">
                         {/* Step indicator */}
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1 sm:gap-1.5">
                             {TOUR_STEPS.map((_, index) => (
                                 <div
                                     key={index}
-                                    className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentStep
-                                        ? 'bg-blue-500 w-6'
+                                    className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full transition-all duration-300 ${index === currentStep
+                                        ? 'bg-blue-500 w-4 sm:w-6'
                                         : index < currentStep
-                                            ? 'bg-blue-300 dark:bg-blue-700'
-                                            : 'bg-slate-300 dark:bg-slate-600'
+                                            ? 'bg-blue-600'
+                                            : 'bg-slate-600'
                                         }`}
                                 />
                             ))}
                         </div>
 
-                        {/* Buttons */}
-                        <div className="flex items-center gap-2">
+                        {/* Buttons - larger touch targets on mobile */}
+                        <div className="flex items-center gap-1 sm:gap-2">
                             {!isFirstStep && (
                                 <button
                                     onClick={goToPrev}
-                                    className="px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-800 dark:hover:text-white transition-colors"
+                                    className="px-3 py-2 sm:px-3 sm:py-1.5 text-sm font-medium text-slate-300 hover:text-white transition-colors"
                                 >
-                                    Back
+                                    {t('onboarding.back')}
                                 </button>
                             )}
 
                             <button
                                 onClick={onSkip}
-                                className="px-3 py-1.5 text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                                className="px-3 py-2 sm:px-3 sm:py-1.5 text-sm font-medium text-slate-400 hover:text-slate-200 transition-colors"
                             >
-                                Skip
+                                {t('onboarding.skip')}
                             </button>
 
                             <button
                                 onClick={goToNext}
-                                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity shadow-lg tour-next-btn"
+                                className="px-4 py-2.5 sm:px-4 sm:py-2 bg-gradient-to-r from-blue-500 to-teal-500 text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity shadow-lg tour-next-btn"
                             >
-                                {isLastStep ? 'Get Started' : 'Next'}
+                                {isLastStep ? t('onboarding.getStarted') : t('onboarding.next')}
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* Arrow pointer */}
-                {targetRect && step.position !== 'center' && (
+                {/* Arrow pointer - only show on desktop with valid target */}
+                {targetRect && !isMobile && step.position !== 'center' && (
                     <div
                         className={`absolute tour-arrow tour-arrow-${step.position}`}
                     />

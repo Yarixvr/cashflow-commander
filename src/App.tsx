@@ -12,6 +12,9 @@ import { ProfilePage } from "./components/ProfilePage";
 import { ProfileAvatar } from "./components/ProfileAvatar";
 import { OnboardingTour } from "./components/OnboardingTour";
 import { useOnboarding } from "./hooks/useOnboarding";
+import { LanguageSelector } from "./components/LanguageSelector";
+import { useTranslation } from "react-i18next";
+import { isRTL } from "./i18n";
 
 export default function App() {
   useDeviceType();
@@ -30,6 +33,7 @@ export default function App() {
 }
 
 function AppContent() {
+  const { t, i18n } = useTranslation();
   const initializeCategories = useMutation(api.categories.initializeDefaults);
   const profile = useQuery(api.profiles.getMyProfile);
   const [activeView, setActiveView] = useState<"dashboard" | "themes" | "profile">("dashboard");
@@ -38,6 +42,11 @@ function AppContent() {
   useEffect(() => {
     initializeCategories();
   }, [initializeCategories]);
+
+  // Update document direction for RTL languages
+  useEffect(() => {
+    document.documentElement.dir = isRTL(i18n.language) ? 'rtl' : 'ltr';
+  }, [i18n.language]);
 
   return (
     <div className="min-h-screen">
@@ -49,15 +58,15 @@ function AppContent() {
                 <span className="text-white font-bold text-sm">CF</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d] transition-all-fast">CashFlow Commander</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-200 coral:text-[#9f1239] hidden sm:block transition-all-fast">Master your money. Rule your flow.</p>
+                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d] transition-all-fast">{t('app.title')}</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-200 coral:text-[#9f1239] hidden sm:block transition-all-fast">{t('app.tagline')}</p>
               </div>
             </div>
-            <nav className="hidden md:flex items-center space-x-1 mr-6">
+            <nav className="hidden md:flex items-center gap-1 rtl:gap-reverse me-6">
               {[
-                { id: "dashboard", label: "Dashboard" },
-                { id: "themes", label: "Themes" },
-                { id: "profile", label: "Profile" },
+                { id: "dashboard", labelKey: "nav.dashboard" },
+                { id: "themes", labelKey: "nav.themes" },
+                { id: "profile", labelKey: "nav.profile" },
               ].map((item) => (
                 <button
                   key={item.id}
@@ -67,16 +76,18 @@ function AppContent() {
                     : "text-slate-600 dark:text-slate-300 oled:text-gray-300 emerald:text-emerald-200 space:text-zinc-300 nova:text-sky-200 navy:text-blue-100 coral:text-[#a21d4d] hover:bg-white/20"
                     }`}
                 >
-                  {item.label}
+                  {t(item.labelKey)}
                 </button>
               ))}
             </nav>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              {/* Language Selector */}
+              <LanguageSelector />
               {/* Profile Avatar Button */}
               <button
                 onClick={() => setActiveView("profile")}
                 className="hover:opacity-80 transition-opacity"
-                title="Go to Profile"
+                title={t('nav.profile')}
               >
                 <ProfileAvatar
                   username={profile?.username || "User"}
@@ -125,11 +136,13 @@ function AppContent() {
       </main>
 
       {/* Onboarding Tour */}
-      <OnboardingTour
-        isActive={isOnboardingActive}
-        onComplete={completeOnboarding}
-        onSkip={skipOnboarding}
-      />
+      {isOnboardingActive && (
+        <OnboardingTour
+          isActive={isOnboardingActive}
+          onComplete={completeOnboarding}
+          onSkip={skipOnboarding}
+        />
+      )}
     </div>
   );
 }

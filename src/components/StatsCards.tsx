@@ -8,35 +8,38 @@ interface StatsCardsProps {
   accounts: any[];
 }
 
+import { useTranslation } from "react-i18next";
+
 export function StatsCards({ totalBalance, monthlyStats, accounts }: StatsCardsProps) {
+  const { t } = useTranslation();
   const income = monthlyStats?.income || 0;
   const expenses = monthlyStats?.expenses || 0;
   const netFlow = income - expenses;
 
   const stats = [
     {
-      title: "Total Balance",
+      title: t('stats.totalBalance'),
       value: totalBalance,
       change: null,
       icon: "💰",
       color: "from-blue-500 to-blue-600",
     },
     {
-      title: "Monthly Income",
+      title: t('stats.monthlyIncome'),
       value: income,
       change: null,
       icon: "📈",
       color: "from-green-500 to-green-600",
     },
     {
-      title: "Monthly Expenses",
+      title: t('stats.monthlyExpenses'),
       value: expenses,
       change: null,
       icon: "📉",
       color: "from-red-500 to-red-600",
     },
     {
-      title: "Net Flow",
+      title: t('stats.netFlow'),
       value: netFlow,
       change: null,
       icon: netFlow >= 0 ? "✅" : "⚠️",

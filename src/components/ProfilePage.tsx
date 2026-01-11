@@ -5,8 +5,10 @@ import { ProfileAvatar } from "./ProfileAvatar";
 import { BadgeDisplay } from "./BadgeDisplay";
 import { AdminBadges } from "./AdminBadges";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export function ProfilePage() {
+    const { t } = useTranslation();
     const profile = useQuery(api.profiles.getMyProfileWithBadges);
     const isFounder = useQuery(api.badges.isFounder);
     const upsertProfile = useMutation(api.profiles.upsertProfile);
@@ -44,10 +46,10 @@ export function ProfilePage() {
                 username: username.trim(),
                 profilePictureUrl: profilePictureUrl.trim() || undefined,
             });
-            toast.success("Profile updated successfully!");
+            toast.success(t('profile.success'));
             setIsEditing(false);
         } catch (error) {
-            toast.error("Failed to update profile");
+            toast.error(t('profile.error'));
             console.error(error);
         } finally {
             setIsSaving(false);
@@ -82,14 +84,14 @@ export function ProfilePage() {
             <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-900 coral:border-[#fda4af] bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] emerald:bg-[#0f1f18] space:bg-[#2c2c2e] nova:bg-[#0f172a] navy:bg-[#16213d] coral:bg-[#fff1f2] p-6 transition-all-fast">
                 <div className="flex items-start justify-between mb-6">
                     <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">
-                        My Profile
+                        {t('profile.title')}
                     </h2>
                     {!isEditing && (
                         <button
                             onClick={() => setIsEditing(true)}
                             className="px-4 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"
                         >
-                            Edit Profile
+                            {t('profile.edit')}
                         </button>
                     )}
                 </div>
@@ -105,7 +107,7 @@ export function ProfilePage() {
                         {isEditing && (
                             <div className="w-full max-w-xs">
                                 <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">
-                                    Profile Picture URL
+                                    {t('profile.avatarUrl')}
                                 </label>
                                 <input
                                     type="url"
@@ -122,7 +124,7 @@ export function ProfilePage() {
                     <div className="flex-1 space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-400 navy:text-blue-200 coral:text-[#9f1239] mb-1">
-                                Username
+                                {t('profile.username')}
                             </label>
                             {isEditing ? (
                                 <input
@@ -134,7 +136,7 @@ export function ProfilePage() {
                                 />
                             ) : (
                                 <p className="text-xl font-semibold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">
-                                    {profile?.username || "No username set"}
+                                    {profile?.username || t('profile.noUsername')}
                                 </p>
                             )}
                         </div>
@@ -143,7 +145,7 @@ export function ProfilePage() {
                         {profile?.badges && profile.badges.length > 0 && (
                             <div>
                                 <label className="block text-sm font-medium text-slate-600 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-400 navy:text-blue-200 coral:text-[#9f1239] mb-2">
-                                    Badges
+                                    {t('profile.badges')}
                                 </label>
                                 <BadgeDisplay badges={profile.badges} />
                             </div>
@@ -157,14 +159,14 @@ export function ProfilePage() {
                                     disabled={isSaving}
                                     className="px-6 py-2 text-sm font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                                 >
-                                    {isSaving ? "Saving..." : "Save Changes"}
+                                    {isSaving ? t('profile.saving') : t('profile.save')}
                                 </button>
                                 <button
                                     onClick={handleCancel}
                                     disabled={isSaving}
                                     className="px-6 py-2 text-sm font-medium rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
                                 >
-                                    Cancel
+                                    {t('profile.cancel')}
                                 </button>
                             </div>
                         )}

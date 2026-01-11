@@ -2,75 +2,84 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export function SignInForm() {
+  const { t } = useTranslation();
   const { signIn } = useAuthActions();
-  const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
+  const [step, setStep] = useState<"signIn" | "signUp">("signIn");
   const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitting(true);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    try {
+      await signIn("password", { email, password, flow: step });
+    } catch (error: any) {
+      if (error.message.includes("Invalid password")) {
+        toast.error(t('auth.invalidPassword') || "Invalid password");
+      } else {
+        toast.error(step === "signIn" ? t('auth.signInError') : t('auth.signUpError'));
+      }
+    }
+    setSubmitting(false);
+  };
 
   return (
     <div className="w-full">
       <form
         className="flex flex-col gap-form-field"
-        onSubmit={(e) => {
-          e.preventDefault();
-          setSubmitting(true);
-          const formData = new FormData(e.target as HTMLFormElement);
-          formData.set("flow", flow);
-          void signIn("password", formData).catch((error) => {
-            let toastTitle = "";
-            if (error.message.includes("Invalid password")) {
-              toastTitle = "Invalid password. Please try again.";
-            } else {
-              toastTitle =
-                flow === "signIn"
-                  ? "Could not sign in, did you mean to sign up?"
-                  : "Could not sign up, did you mean to sign in?";
-            }
-            toast.error(toastTitle);
-            setSubmitting(false);
-          });
-        }}
+        onSubmit={handleSubmit}
       >
+        <div className="flex flex-col space-y-2 mb-4">
+          <h2 className="text-2xl font-bold text-center text-slate-800 dark:text-white">
+            {step === "signIn" ? t('auth.signIn') : t('auth.signUp')}
+          </h2>
+          <p className="text-center text-slate-600 dark:text-slate-300">{t('app.tagline')}</p>
+        </div>
         <input
           className="auth-input-field"
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder={t('auth.emailPlaceholder') || "Email"}
           required
         />
         <input
           className="auth-input-field"
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder={t('auth.passwordPlaceholder') || "Password"}
           required
         />
         <button className="auth-button" type="submit" disabled={submitting}>
-          {flow === "signIn" ? "Sign in" : "Sign up"}
+          {step === "signIn" ? t('auth.signIn') : t('auth.signUp')}
         </button>
         <div className="text-center text-sm text-secondary dark:text-slate-300">
           <span>
-            {flow === "signIn"
-              ? "Don't have an account? "
-              : "Already have an account? "}
+            {step === "signIn"
+              ? t('auth.noAccount')
+              : t('auth.haveAccount')}
           </span>
           <button
             type="button"
-            className="text-primary hover:text-primary-hover hover:underline font-medium cursor-pointer"
-            onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
+            className="text-primary hover:text-primary-hover hover:underline font-medium cursor-pointer ml-1"
+            onClick={() => setStep(step === "signIn" ? "signUp" : "signIn")}
           >
-            {flow === "signIn" ? "Sign up instead" : "Sign in instead"}
+            {step === "signIn" ? t('auth.signUpInstead') : t('auth.signInInstead')}
           </button>
         </div>
       </form>
       <div className="flex items-center justify-center my-3">
         <hr className="my-4 grow border-gray-200 dark:border-slate-600" />
-        <span className="mx-4 text-secondary dark:text-slate-300">or</span>
+        <span className="mx-4 text-secondary dark:text-slate-300">{t('common.or') || "or"}</span>
         <hr className="my-4 grow border-gray-200 dark:border-slate-600" />
       </div>
       <button className="auth-button" onClick={() => void signIn("anonymous")}>
-        Sign in anonymously
+        {t('auth.anonymous') || "Sign in anonymously"}
       </button>
     </div>
   );

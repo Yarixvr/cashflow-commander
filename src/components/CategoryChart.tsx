@@ -1,7 +1,10 @@
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
+import { useTranslation } from "react-i18next";
+
 export function CategoryChart() {
+  const { t } = useTranslation();
   const expenseBreakdown = useQuery(api.transactions.getCategoryBreakdown, { type: "expense", days: 30 });
 
   if (!expenseBreakdown) {
@@ -32,8 +35,8 @@ export function CategoryChart() {
   return (
     <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-900 coral:border-[#fda4af] bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] emerald:bg-[#0f1f18] space:bg-[#2c2c2e] nova:bg-[#0f172a] navy:bg-[#16213d] coral:bg-[#fff1f2]">
       <div className="p-6 border-b border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-800 coral:border-[#fb7185]">
-        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">Spending by Category</h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-400 navy:text-blue-200 coral:text-[#be123c]">Last 30 days</p>
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-gray-100 emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d]">{t('charts.spendingByCategory')}</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-400 navy:text-blue-200 coral:text-[#be123c]">{t('charts.last30Days')}</p>
       </div>
       <div className="p-6">
         {expenseBreakdown.length === 0 ? (
@@ -41,8 +44,8 @@ export function CategoryChart() {
             <div className="w-16 h-16 bg-slate-100 dark:bg-slate-700 oled:bg-gray-800 emerald:bg-emerald-800/70 space:bg-zinc-700 nova:bg-sky-800/70 navy:bg-[#1d4ed8]/40 coral:bg-[#fecdd3] rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">📊</span>
             </div>
-            <p className="text-slate-600 dark:text-slate-300 oled:text-gray-300 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c]">No expenses to show</p>
-            <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-300 coral:text-[#fb7185]">Add some transactions to see your spending breakdown</p>
+            <p className="text-slate-600 dark:text-slate-300 oled:text-gray-300 emerald:text-emerald-300 space:text-zinc-300 nova:text-sky-200 navy:text-blue-200 coral:text-[#be123c]">{t('charts.noExpenses')}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 oled:text-gray-500 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-300 coral:text-[#fb7185]">{t('charts.addExpenses')}</p>
           </div>
         ) : (
           <div className="space-y-4">
