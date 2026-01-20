@@ -6,6 +6,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      // Locked breakpoints - mobile first
+      'sm': '640px',
+      'md': '768px',     // Tablet starts here
+      'lg': '1024px',    // Desktop starts here
+      'xl': '1280px',
+      '2xl': '1536px',
+    },
     extend: {
       colors: {
         primary: {
@@ -66,6 +74,8 @@ export default {
       },
       spacing: {
         'section': '2rem',
+        'safe-bottom': 'env(safe-area-inset-bottom, 0px)',
+        'nav-height': '4rem',
       },
       borderRadius: {
         'container': '0.75rem',

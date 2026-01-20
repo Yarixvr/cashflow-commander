@@ -6,6 +6,7 @@ import { BadgeDisplay } from "./BadgeDisplay";
 import { AdminBadges } from "./AdminBadges";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { useOnboarding } from "../hooks/useOnboarding";
 
 export function ProfilePage() {
     const { t } = useTranslation();
@@ -13,6 +14,7 @@ export function ProfilePage() {
     const isFounder = useQuery(api.badges.isFounder);
     const upsertProfile = useMutation(api.profiles.upsertProfile);
     const initializeFounderBadge = useMutation(api.badges.initializeFounderBadge);
+    const { resetOnboarding } = useOnboarding();
 
     const [username, setUsername] = useState("");
     const [profilePictureUrl, setProfilePictureUrl] = useState("");
@@ -172,6 +174,19 @@ export function ProfilePage() {
                         )}
                     </div>
                 </div>
+            </div>
+
+            {/* Settings Section */}
+            <div className="rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 oled:border-gray-800 emerald:border-emerald-700 space:border-zinc-600 nova:border-sky-700 navy:border-blue-900 coral:border-[#fda4af] bg-white dark:bg-slate-800 oled:bg-[#0b0b0b] emerald:bg-[#0f1f18] space:bg-[#2c2c2e] nova:bg-[#0f172a] navy:bg-[#16213d] coral:bg-[#fff1f2] p-6 transition-all-fast">
+                <h3 className="text-lg font-semibold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d] mb-4">
+                    Settings
+                </h3>
+                <button
+                    onClick={() => resetOnboarding()}
+                    className="min-h-[48px] px-6 py-3 text-sm font-medium rounded-lg bg-slate-100 dark:bg-slate-700 oled:bg-gray-800 emerald:bg-emerald-800 space:bg-zinc-700 nova:bg-sky-800 navy:bg-blue-800 coral:bg-pink-100 text-slate-700 dark:text-slate-200 oled:text-gray-200 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-200 coral:text-pink-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors touch-feedback"
+                >
+                    {t('profile.restartTutorial')}
+                </button>
             </div>
 
             {/* Admin Badge Management - Only visible to founder */}

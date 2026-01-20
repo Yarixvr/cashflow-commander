@@ -10,7 +10,8 @@ interface TourStep {
     icon: string;
 }
 
-const TOUR_STEPS: TourStep[] = [
+// Mobile-optimized onboarding: 4 steps
+const MOBILE_TOUR_STEPS: TourStep[] = [
     {
         id: 'welcome',
         titleKey: 'onboarding.welcome.title',
@@ -24,6 +25,42 @@ const TOUR_STEPS: TourStep[] = [
         titleKey: 'onboarding.navigation.title',
         descriptionKey: 'onboarding.navigation.description',
         targetSelector: 'nav',
+        position: 'top',
+        icon: '🧭',
+    },
+    {
+        id: 'themes',
+        titleKey: 'onboarding.themes.title',
+        descriptionKey: 'onboarding.themes.description',
+        targetSelector: 'button[data-id="themes"]',
+        position: 'top',
+        icon: '🎨',
+    },
+    {
+        id: 'complete',
+        titleKey: 'onboarding.complete.title',
+        descriptionKey: 'onboarding.complete.description',
+        targetSelector: null,
+        position: 'center',
+        icon: '✨',
+    },
+];
+
+// Full desktop onboarding: 7 steps
+const DESKTOP_TOUR_STEPS: TourStep[] = [
+    {
+        id: 'welcome',
+        titleKey: 'onboarding.welcome.title',
+        descriptionKey: 'onboarding.welcome.description',
+        targetSelector: null,
+        position: 'center',
+        icon: '👋',
+    },
+    {
+        id: 'navigation',
+        titleKey: 'onboarding.navigation.title',
+        descriptionKey: 'onboarding.navigation.description',
+        targetSelector: 'nav button[data-id="dashboard"]',
         position: 'bottom',
         icon: '🧭',
     },
@@ -55,7 +92,7 @@ const TOUR_STEPS: TourStep[] = [
         id: 'themes',
         titleKey: 'onboarding.themes.title',
         descriptionKey: 'onboarding.themes.description',
-        targetSelector: 'button[data-id="themes"], nav button',
+        targetSelector: 'button[data-id="themes"]',
         position: 'bottom',
         icon: '🎨',
     },
@@ -86,10 +123,12 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
     const retryCountRef = useRef(0);
     const maxRetries = 3;
 
-    const step = TOUR_STEPS[currentStep];
+    // Use adaptive steps based on device type
+    const tourSteps = isMobile ? MOBILE_TOUR_STEPS : DESKTOP_TOUR_STEPS;
+    const step = tourSteps[currentStep] || tourSteps[0];
     const isFirstStep = currentStep === 0;
-    const isLastStep = currentStep === TOUR_STEPS.length - 1;
-    const progress = ((currentStep + 1) / TOUR_STEPS.length) * 100;
+    const isLastStep = currentStep === tourSteps.length - 1;
+    const progress = ((currentStep + 1) / tourSteps.length) * 100;
 
     // Reset step when tour becomes active
     useEffect(() => {
@@ -103,7 +142,7 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
     // Check for mobile viewport
     useEffect(() => {
         const checkMobile = () => {
-            setIsMobile(window.innerWidth < 640);
+            setIsMobile(window.innerWidth < 768);
         };
         checkMobile();
         window.addEventListener('resize', checkMobile);
@@ -348,7 +387,7 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
                     <div className="flex items-center justify-between">
                         {/* Step indicator */}
                         <div className="flex items-center gap-1 sm:gap-1.5">
-                            {TOUR_STEPS.map((_, index) => (
+                            {tourSteps.map((_: TourStep, index: number) => (
                                 <div
                                     key={index}
                                     className={`w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full transition-all duration-300 ${index === currentStep

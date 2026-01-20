@@ -1,7 +1,9 @@
 {
     "app": {
         "title": "CashFlow Commander",
-        "tagline": "Master your money. Rule your flow."
+        "tagline": "Master your money. Rule your flow.",
+        "mission": "CashFlow Commander helps you understand and control your money in seconds.",
+        "version": "v0.5 Beta"
     },
     "nav": {
         "dashboard": "Dashboard",
@@ -34,8 +36,8 @@
     "charts": {
         "spendingByCategory": "Spending by Category",
         "last30Days": "Last 30 days",
-        "noExpenses": "No expenses to show",
-        "addExpenses": "Add some transactions to see your spending breakdown"
+        "noExpenses": "No spending data yet",
+        "addExpenses": "Add transactions to see your breakdown."
     },
     "stats": {
         "totalBalance": "Total Balance",
@@ -51,8 +53,8 @@
     },
     "transactions": {
         "recent": "Recent Transactions",
-        "empty": "No transactions yet",
-        "emptySubtitle": "Add your first transaction to get started",
+        "empty": "No activity yet",
+        "emptySubtitle": "Add your first transaction.",
         "add": "Add Transaction",
         "type": "Type",
         "income": "Income",
@@ -82,7 +84,8 @@
         "saving": "Saving...",
         "success": "Profile updated successfully!",
         "error": "Failed to update profile",
-        "noUsername": "No username set"
+        "noUsername": "Set your username",
+        "restartTutorial": "Restart Tutorial"
     },
     "insights": {
         "title": "Smart Insights",
@@ -91,7 +94,7 @@
         "clearAll": "Clear all",
         "clearing": "Clearing...",
         "empty": "No insights yet",
-        "emptySubtitle": "Click 'Generate' to analyze your transactions.",
+        "emptySubtitle": "Tap Generate to get started.",
         "markRead": "Mark as read",
         "generatedSuccess": "Insights generated successfully!",
         "error": "Failed to generate insights",
@@ -110,7 +113,7 @@
         },
         "navigation": {
             "title": "Easy Navigation 🧭",
-            "description": "Switch between your Dashboard, Themes, and Profile settings from the top navigation bar."
+            "description": "Switch between your Dashboard, Themes, and Profile settings using the navigation bar."
         },
         "stats": {
             "title": "Financial Overview 📊",
@@ -167,8 +170,8 @@
             "yearly": "Yearly"
         },
         "overview": "Budget Overview",
-        "noBudgets": "No budgets set",
-        "createMsg": "Create budgets to track your spending",
+        "noBudgets": "No budgets yet",
+        "createMsg": "Set a budget to stay on track.",
         "remaining": "remaining",
         "over": "over",
         "used": "of budget used",

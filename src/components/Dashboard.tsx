@@ -56,8 +56,18 @@ export function Dashboard() {
             accounts={accounts || []}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 auto-animate">
-            <div className="lg:col-span-2 space-y-6 auto-animate">
+          {/* Mobile: Stack vertically with QuickActions first for thumb reach */}
+          <div className="block lg:hidden space-y-6 auto-animate">
+            <QuickActions />
+            <CategoryChart />
+            <BudgetOverview budgets={budgets || []} />
+            <InsightCards insights={insights || []} />
+            <TransactionList limit={5} showHeader={true} />
+          </div>
+
+          {/* Desktop: Original 3-column grid */}
+          <div className="hidden lg:grid grid-cols-3 gap-6 auto-animate">
+            <div className="col-span-2 space-y-6 auto-animate">
               <CategoryChart />
               <TransactionList limit={5} showHeader={true} />
             </div>

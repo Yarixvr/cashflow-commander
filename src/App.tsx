@@ -12,7 +12,9 @@ import { ProfilePage } from "./components/ProfilePage";
 import { ProfileAvatar } from "./components/ProfileAvatar";
 import { OnboardingTour } from "./components/OnboardingTour";
 import { useOnboarding } from "./hooks/useOnboarding";
+import { OnboardingProvider } from "./context/OnboardingContext";
 import { LanguageSelector } from "./components/LanguageSelector";
+import { BottomNav } from "./components/BottomNav";
 import { useTranslation } from "react-i18next";
 import { isRTL } from "./i18n";
 
@@ -22,7 +24,9 @@ export default function App() {
   return (
     <div className="min-h-screen theme-gradient transition-all-fast">
       <Authenticated>
-        <AppContent />
+        <OnboardingProvider>
+          <AppContent />
+        </OnboardingProvider>
       </Authenticated>
       <Unauthenticated>
         <LandingPage />
@@ -58,7 +62,10 @@ function AppContent() {
                 <span className="text-white font-bold text-sm">CF</span>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d] transition-all-fast">{t('app.title')}</h1>
+                <div className="flex items-center gap-2">
+                  <h1 className="text-xl font-bold text-slate-800 dark:text-slate-100 oled:text-white emerald:text-emerald-100 space:text-zinc-100 nova:text-sky-100 navy:text-blue-100 coral:text-[#7f1d1d] transition-all-fast">{t('app.title')}</h1>
+                  <span className="hidden sm:inline-flex px-1.5 py-0.5 text-[10px] font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 rounded-full">{t('app.version')}</span>
+                </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 oled:text-gray-400 emerald:text-emerald-400 space:text-zinc-400 nova:text-sky-300 navy:text-blue-200 coral:text-[#9f1239] hidden sm:block transition-all-fast">{t('app.tagline')}</p>
               </div>
             </div>
@@ -70,6 +77,7 @@ function AppContent() {
               ].map((item) => (
                 <button
                   key={item.id}
+                  data-id={item.id}
                   onClick={() => setActiveView(item.id as "dashboard" | "themes" | "profile")}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-all-fast auto-animate ${activeView === item.id
                     ? "bg-blue-600 text-white shadow-md"
@@ -100,40 +108,15 @@ function AppContent() {
           </div>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 auto-animate">
-        <div className="md:hidden flex items-center space-x-2">
-          <button
-            onClick={() => setActiveView("dashboard")}
-            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all-fast ${activeView === "dashboard"
-              ? "bg-blue-600 text-white shadow-md"
-              : "bg-white/70 dark:bg-slate-800/70 oled:bg-black/70 emerald:bg-emerald-900/60 space:bg-zinc-800/70 nova:bg-sky-900/60 navy:bg-[#0f172a]/70 coral:bg-white/80 text-slate-600 dark:text-slate-300"
-              }`}
-          >
-            Dashboard
-          </button>
-          <button
-            onClick={() => setActiveView("themes")}
-            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all-fast ${activeView === "themes"
-              ? "bg-blue-600 text-white shadow-md"
-              : "bg-white/70 dark:bg-slate-800/70 oled:bg-black/70 emerald:bg-emerald-900/60 space:bg-zinc-800/70 nova:bg-sky-900/60 navy:bg-[#0f172a]/70 coral:bg-white/80 text-slate-600 dark:text-slate-300"
-              }`}
-          >
-            Themes
-          </button>
-          <button
-            onClick={() => setActiveView("profile")}
-            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all-fast ${activeView === "profile"
-              ? "bg-blue-600 text-white shadow-md"
-              : "bg-white/70 dark:bg-slate-800/70 oled:bg-black/70 emerald:bg-emerald-900/60 space:bg-zinc-800/70 nova:bg-sky-900/60 navy:bg-[#0f172a]/70 coral:bg-white/80 text-slate-600 dark:text-slate-300"
-              }`}
-          >
-            Profile
-          </button>
-        </div>
+      {/* Main content with bottom padding for mobile nav */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8 space-y-6 auto-animate">
         {activeView === "dashboard" && <Dashboard />}
         {activeView === "themes" && <ThemeGallery />}
         {activeView === "profile" && <ProfilePage />}
       </main>
+
+      {/* Bottom Navigation for Mobile */}
+      <BottomNav activeView={activeView} setActiveView={setActiveView} />
 
       {/* Onboarding Tour */}
       {isOnboardingActive && (

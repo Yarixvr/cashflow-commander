@@ -21,6 +21,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
   const accounts = useQuery(api.accounts.list);
   const categories = useQuery(api.categories.list, { type });
   const createTransaction = useMutation(api.transactions.create);
+  const deleteTransaction = useMutation(api.transactions.deleteTransaction);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,7 +32,7 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
     }
 
     try {
-      await createTransaction({
+      const transactionId = await createTransaction({
         accountId: accountId as any,
         type,
         amount: parseFloat(amount),
@@ -40,7 +41,16 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
         date: new Date(date).getTime(),
       });
 
-      toast.success(t('transactions.success'));
+      toast.success(t('transactions.success'), {
+        action: {
+          label: t('common.undo'),
+          onClick: async () => {
+            // Optimistically delete (Undo Add)
+            await deleteTransaction({ transactionId });
+            toast.success(t('transactions.undone'));
+          }
+        }
+      });
       onClose();
 
       // Reset form
@@ -79,8 +89,8 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
                 type="button"
                 onClick={() => setType("expense")}
                 className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${type === "expense"
-                    ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-2 border-red-200 dark:border-red-700"
-                    : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
+                  ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-2 border-red-200 dark:border-red-700"
+                  : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
                   }`}
               >
                 📉 {t('transactions.expense')}
@@ -89,8 +99,8 @@ export function AddTransactionModal({ isOpen, onClose }: AddTransactionModalProp
                 type="button"
                 onClick={() => setType("income")}
                 className={`flex-1 py-2 px-4 rounded-lg font-medium transition-colors ${type === "income"
-                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-2 border-green-200 dark:border-green-700"
-                    : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
+                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-2 border-green-200 dark:border-green-700"
+                  : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-2 border-transparent"
                   }`}
               >
                 📈 {t('transactions.income')}

@@ -80,6 +80,35 @@ export const create = mutation({
   },
 });
 
+export const deleteTransaction = mutation({
+  args: {
+    transactionId: v.id("transactions"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+
+    const transaction = await ctx.db.get(args.transactionId);
+    if (!transaction || transaction.userId !== userId) {
+      throw new Error("Transaction not found");
+    }
+
+    const account = await ctx.db.get(transaction.accountId);
+    if (account) {
+      // Reverse balance change
+      // If income (+), we subtract. If expense (-), we add (subtract negative).
+      const balanceChange = transaction.type === "income" ? -transaction.amount : transaction.amount;
+
+      await ctx.db.patch(transaction.accountId, {
+        balance: account.balance + balanceChange,
+      });
+    }
+
+    await ctx.db.delete(args.transactionId);
+    return transaction; // Return deleted data for potential undo/redo on client side if needed
+  },
+});
+
 export const getMonthlyStats = query({
   args: {
     month: v.optional(v.number()),
@@ -98,7 +127,7 @@ export const getMonthlyStats = query({
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user_and_date", (q) => 
+      .withIndex("by_user_and_date", (q) =>
         q.eq("userId", userId).gte("date", startOfMonth).lte("date", endOfMonth)
       )
       .collect();
@@ -129,7 +158,7 @@ export const getCategoryBreakdown = query({
 
     const transactions = await ctx.db
       .query("transactions")
-      .withIndex("by_user_and_date", (q) => 
+      .withIndex("by_user_and_date", (q) =>
         q.eq("userId", userId).gte("date", startDate)
       )
       .filter((q) => q.eq(q.field("type"), args.type))
