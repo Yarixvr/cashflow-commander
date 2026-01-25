@@ -8,7 +8,11 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useOnboarding } from "../hooks/useOnboarding";
 
-export function ProfilePage() {
+interface ProfilePageProps {
+    onNavigateToDashboard?: () => void;
+}
+
+export function ProfilePage({ onNavigateToDashboard }: ProfilePageProps) {
     const { t } = useTranslation();
     const profile = useQuery(api.profiles.getMyProfileWithBadges);
     const isFounder = useQuery(api.badges.isFounder);
@@ -182,7 +186,10 @@ export function ProfilePage() {
                     Settings
                 </h3>
                 <button
-                    onClick={() => resetOnboarding()}
+                    onClick={() => {
+                        resetOnboarding();
+                        onNavigateToDashboard?.();
+                    }}
                     className="min-h-[48px] px-6 py-3 text-sm font-medium rounded-lg bg-slate-100 dark:bg-slate-700 oled:bg-gray-800 emerald:bg-emerald-800 space:bg-zinc-700 nova:bg-sky-800 navy:bg-blue-800 coral:bg-pink-100 text-slate-700 dark:text-slate-200 oled:text-gray-200 emerald:text-emerald-200 space:text-zinc-200 nova:text-sky-200 navy:text-blue-200 coral:text-pink-700 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors touch-feedback"
                 >
                     {t('profile.restartTutorial')}

@@ -39,7 +39,7 @@ export function BottomNav({ activeView, setActiveView }: BottomNavProps) {
     ];
 
     return (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-800/95 oled:bg-black/95 emerald:bg-[#0a1612]/95 space:bg-[#1c1c1e]/95 nova:bg-[#020617]/95 navy:bg-[#0f172a]/95 coral:bg-white/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-700 oled:border-gray-900 emerald:border-emerald-800 space:border-zinc-700 nova:border-sky-800 navy:border-blue-900 coral:border-pink-200 transition-all-fast">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] bg-white/95 dark:bg-slate-800/95 oled:bg-black/95 emerald:bg-[#0a1612]/95 space:bg-[#1c1c1e]/95 nova:bg-[#020617]/95 navy:bg-[#0f172a]/95 coral:bg-white/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-700 oled:border-gray-900 emerald:border-emerald-800 space:border-zinc-700 nova:border-sky-800 navy:border-blue-900 coral:border-pink-200 transition-all-fast">
             {/* Safe area padding for notched phones */}
             <div className="pb-[env(safe-area-inset-bottom)]">
                 <div className="flex items-center justify-around h-16">

@@ -24,16 +24,18 @@ const MOBILE_TOUR_STEPS: TourStep[] = [
         id: 'navigation',
         titleKey: 'onboarding.navigation.title',
         descriptionKey: 'onboarding.navigation.description',
-        targetSelector: 'nav',
-        position: 'top',
+        // Target the button inside the mobile bottom nav (md:hidden)
+        targetSelector: 'nav.md\\:hidden button[data-id="dashboard"]',
+        position: 'center',
         icon: '🧭',
     },
     {
         id: 'themes',
         titleKey: 'onboarding.themes.title',
         descriptionKey: 'onboarding.themes.description',
-        targetSelector: 'button[data-id="themes"]',
-        position: 'top',
+        // Target the button inside the mobile bottom nav (md:hidden)
+        targetSelector: 'nav.md\\:hidden button[data-id="themes"]',
+        position: 'center',
         icon: '🎨',
     },
     {
@@ -129,6 +131,9 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
     const isFirstStep = currentStep === 0;
     const isLastStep = currentStep === tourSteps.length - 1;
     const progress = ((currentStep + 1) / tourSteps.length) * 100;
+
+    // Check key: hide tooltip if we need a target but haven't found it yet
+    const shouldHideTooltip = !isMobile && step.targetSelector && !targetRect;
 
     // Reset step when tour becomes active
     useEffect(() => {
@@ -252,19 +257,27 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
 
     // Calculate tooltip position with mobile-aware clamping
     const getTooltipPosition = () => {
+        // Use visualViewport if available for more accurate mobile sizing
+        const viewportWidth = window.visualViewport?.width || window.innerWidth;
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const viewportTop = window.visualViewport?.offsetTop || 0;
+        const viewportLeft = window.visualViewport?.offsetLeft || 0;
+
         if (!targetRect || step.position === 'center' || isMobile) {
+            // Center in the visual viewport
             return {
-                top: '50%',
-                left: '50%',
+                top: `${viewportTop + (viewportHeight / 2)}px`,
+                left: `${viewportLeft + (viewportWidth / 2)}px`,
                 transform: 'translate(-50%, -50%)',
+                width: isMobile ? 'calc(100vw - 32px)' : undefined,
+                maxWidth: '400px',
+                position: 'fixed' as const, // Ensure it floats above everything
             };
         }
 
         const padding = 20;
-        const tooltipWidth = Math.min(360, window.innerWidth - 40);
+        const tooltipWidth = Math.min(360, viewportWidth - 40);
         const tooltipHeight = 200;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
 
         let top: number;
         let left: number;
@@ -302,7 +315,7 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
 
     // Calculate spotlight clip path
     const getSpotlightClipPath = () => {
-        if (!targetRect || isMobile) return 'none';
+        if (!targetRect) return 'none';
 
         const padding = 8;
         const x = targetRect.left - padding;
@@ -330,18 +343,26 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
     };
 
     return (
-        <div className="fixed inset-0 z-[9999] pointer-events-auto">
+        <div className={`fixed inset-0 z-[9999] pointer-events-auto ${isMobile ? 'flex items-center justify-center p-4' : ''}`}>
             {/* Dark overlay with spotlight cutout */}
             <div
-                className="absolute inset-0 bg-black/80 transition-all duration-500"
+                className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-all duration-500 touch-none"
                 style={{
-                    clipPath: targetRect && !isMobile ? getSpotlightClipPath() : 'none',
+                    clipPath: targetRect ? getSpotlightClipPath() : 'none',
+                    // On mobile, just fill the screen without fixed positioning hacks
+                    ...(isMobile ? { position: 'absolute' } : {
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                    })
                 }}
                 onClick={onSkip}
             />
 
-            {/* Spotlight ring effect - hide on mobile or when no target */}
-            {targetRect && !isMobile && (
+            {/* Spotlight ring effect - enable on mobile too */}
+            {targetRect && (
                 <div
                     className="absolute pointer-events-none tour-spotlight-ring"
                     style={{
@@ -357,8 +378,22 @@ export function OnboardingTour({ isActive, onComplete, onSkip }: OnboardingTourP
             {/* Tooltip - responsive width */}
             <div
                 ref={tooltipRef}
-                className={`absolute w-[90vw] max-w-[360px] bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden tour-tooltip ${isAnimating ? 'tour-tooltip-exit' : 'tour-tooltip-enter'}`}
-                style={getTooltipPosition()}
+                className={`
+                    bg-slate-900 rounded-2xl shadow-2xl border border-slate-700 overflow-hidden tour-tooltip 
+                    ${isAnimating ? 'tour-tooltip-exit' : 'tour-tooltip-enter'}
+                    ${isMobile ? 'relative w-full max-w-sm z-50' : 'absolute w-[90vw] max-w-[360px]'}
+                `}
+                style={isMobile ? {
+                    // Reset styles for flexbox centering
+                    top: 'auto',
+                    left: 'auto',
+                    transform: 'none',
+                    opacity: 1 // Always visible on mobile once mounted
+                } : {
+                    ...getTooltipPosition(),
+                    opacity: shouldHideTooltip ? 0 : 1, // Prevent flash of misplaced content
+                    transition: 'opacity 0.2s ease, top 0.3s cubic-bezier(0.22, 1, 0.36, 1), left 0.3s cubic-bezier(0.22, 1, 0.36, 1)'
+                }}
             >
                 {/* Progress bar */}
                 <div className="h-1 bg-slate-700">

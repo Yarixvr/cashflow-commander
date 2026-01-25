@@ -22,7 +22,7 @@ export default function App() {
   useDeviceType();
 
   return (
-    <div className="min-h-screen theme-gradient transition-all-fast">
+    <div className="min-h-screen theme-gradient transition-colors duration-200">
       <Authenticated>
         <OnboardingProvider>
           <AppContent />
@@ -94,7 +94,7 @@ function AppContent() {
               {/* Profile Avatar Button */}
               <button
                 onClick={() => setActiveView("profile")}
-                className="hover:opacity-80 transition-opacity"
+                className="hover:opacity-80 transition-opacity hidden md:block"
                 title={t('nav.profile')}
               >
                 <ProfileAvatar
@@ -112,7 +112,7 @@ function AppContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 pb-24 md:pb-8 space-y-6 auto-animate">
         {activeView === "dashboard" && <Dashboard />}
         {activeView === "themes" && <ThemeGallery />}
-        {activeView === "profile" && <ProfilePage />}
+        {activeView === "profile" && <ProfilePage onNavigateToDashboard={() => setActiveView("dashboard")} />}
       </main>
 
       {/* Bottom Navigation for Mobile */}
