@@ -196,5 +196,22 @@
         "emerald": "Dark luxury with rich emerald greens",
         "space": "Sophisticated neutral grey tones",
         "nova": "Vibrant cosmic blue with electric accents"
+    },
+    "suggestions": {
+        "title": "Send a Suggestion",
+        "subtitle": "Have an idea or feedback? We'd love to hear from you!",
+        "placeholder": "Share your idea or feedback...",
+        "submit": "Send",
+        "submitting": "Sending...",
+        "success": "Suggestion sent! Thank you for your feedback.",
+        "error": "Failed to send suggestion. Please try again.",
+        "tooShort": "Suggestion must be at least 3 characters.",
+        "inboxTitle": "Suggestions Inbox",
+        "empty": "No suggestions yet.",
+        "markRead": "Mark as read",
+        "archive": "Archive",
+        "filterAll": "All",
+        "filterNew": "New",
+        "filterRead": "Read"
     }
 }

@@ -15,6 +15,7 @@ import { useOnboarding } from "./hooks/useOnboarding";
 import { OnboardingProvider } from "./context/OnboardingContext";
 import { LanguageSelector } from "./components/LanguageSelector";
 import { BottomNav } from "./components/BottomNav";
+import { SuggestionBox } from "./components/SuggestionBox";
 import { useTranslation } from "react-i18next";
 import { isRTL } from "./i18n";
 
@@ -40,6 +41,7 @@ function AppContent() {
   const { t, i18n } = useTranslation();
   const initializeCategories = useMutation(api.categories.initializeDefaults);
   const profile = useQuery(api.profiles.getMyProfile);
+  const isFounderUser = useQuery(api.badges.isFounder);
   const [activeView, setActiveView] = useState<"dashboard" | "themes" | "profile">("dashboard");
   const { isOnboardingActive, completeOnboarding, skipOnboarding } = useOnboarding();
 
@@ -117,6 +119,9 @@ function AppContent() {
 
       {/* Bottom Navigation for Mobile */}
       <BottomNav activeView={activeView} setActiveView={setActiveView} />
+
+      {/* Suggestion Box FAB — hidden for the founder (they have the inbox on Profile) */}
+      {!isFounderUser && <SuggestionBox />}
 
       {/* Onboarding Tour */}
       {isOnboardingActive && (

@@ -189,5 +189,22 @@
         "emerald": "Lujo oscuro con ricos verdes esmeralda",
         "space": "Tonos grises neutros sofisticados",
         "nova": "Azul cósmico vibrante con acentos eléctricos"
+    },
+    "suggestions": {
+        "title": "Enviar una sugerencia",
+        "subtitle": "¿Tienes una idea o comentario? ¡Nos encantaría escucharte!",
+        "placeholder": "Comparte tu idea o comentario...",
+        "submit": "Enviar",
+        "submitting": "Enviando...",
+        "success": "¡Sugerencia enviada! Gracias por tu comentario.",
+        "error": "Error al enviar la sugerencia. Inténtalo de nuevo.",
+        "tooShort": "La sugerencia debe tener al menos 3 caracteres.",
+        "inboxTitle": "Buzón de sugerencias",
+        "empty": "Aún no hay sugerencias.",
+        "markRead": "Marcar como leído",
+        "archive": "Archivar",
+        "filterAll": "Todos",
+        "filterNew": "Nuevos",
+        "filterRead": "Leídos"
     }
 }

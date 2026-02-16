@@ -17,6 +17,7 @@ import type * as http from "../http.js";
 import type * as insights from "../insights.js";
 import type * as profiles from "../profiles.js";
 import type * as router from "../router.js";
+import type * as suggestions from "../suggestions.js";
 import type * as transactions from "../transactions.js";
 
 import type {
@@ -35,6 +36,7 @@ declare const fullApi: ApiFromModules<{
   insights: typeof insights;
   profiles: typeof profiles;
   router: typeof router;
+  suggestions: typeof suggestions;
   transactions: typeof transactions;
 }>;
 

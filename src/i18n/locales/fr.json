@@ -189,5 +189,22 @@
         "emerald": "Luxe sombre avec des verts émeraude riches",
         "space": "Tons gris neutres sophistiqués",
         "nova": "Bleu cosmique vibrant avec des accents électriques"
+    },
+    "suggestions": {
+        "title": "Envoyer une suggestion",
+        "subtitle": "Vous avez une idée ou un retour ? Nous aimerions vous entendre !",
+        "placeholder": "Partagez votre idée ou commentaire...",
+        "submit": "Envoyer",
+        "submitting": "Envoi en cours...",
+        "success": "Suggestion envoyée ! Merci pour votre retour.",
+        "error": "Échec de l'envoi. Veuillez réessayer.",
+        "tooShort": "La suggestion doit contenir au moins 3 caractères.",
+        "inboxTitle": "Boîte à suggestions",
+        "empty": "Aucune suggestion pour le moment.",
+        "markRead": "Marquer comme lu",
+        "archive": "Archiver",
+        "filterAll": "Tous",
+        "filterNew": "Nouveaux",
+        "filterRead": "Lus"
     }
 }

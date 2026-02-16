@@ -82,6 +82,16 @@ const applicationTables = {
     assignedBy: v.id("users"),
   }).index("by_user", ["userId"])
     .index("by_badge", ["badgeId"]),
+
+  // User suggestions sent to the founder
+  suggestions: defineTable({
+    userId: v.optional(v.id("users")),
+    senderName: v.string(),
+    message: v.string(),
+    status: v.union(v.literal("new"), v.literal("read"), v.literal("archived")),
+    createdAt: v.number(),
+  }).index("by_status", ["status"])
+    .index("by_createdAt", ["createdAt"]),
 };
 
 export default defineSchema({

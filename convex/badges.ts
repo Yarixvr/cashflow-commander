@@ -2,29 +2,27 @@ import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
-// FOUNDER auth account ID - used to identify the admin
-// This is the ID from the authAccounts table
+// FOUNDER identifiers
 const FOUNDER_AUTH_ACCOUNT_ID = "j977s2pz8h0j67a8ygzgbe49ph7t7wdn";
+const FOUNDER_USER_ID = "kh73ra4kd4amrrqm3e0hvdgxv17t6nrx";
 
 // Helper to check if the current user is the founder
 async function checkIsFounder(ctx: any): Promise<{ isFounder: boolean; userId: any }> {
     const userId = await getAuthUserId(ctx);
     if (!userId) return { isFounder: false, userId: null };
 
-    // Look up the auth account to see if this user is linked to the founder account
-    const authAccounts = await ctx.db.query("authAccounts").collect();
-    const founderAccount = authAccounts.find(
-        (acc: any) => acc._id === FOUNDER_AUTH_ACCOUNT_ID ||
-            (acc.userId === userId && acc._id === FOUNDER_AUTH_ACCOUNT_ID)
-    );
+    // Direct userId check (most reliable)
+    if (userId === FOUNDER_USER_ID) {
+        return { isFounder: true, userId };
+    }
 
-    // Also check if this user's ID matches what the founder auth account links to
+    // Fallback: check via authAccounts link
+    const authAccounts = await ctx.db.query("authAccounts").collect();
     const founderLinkedAccount = authAccounts.find(
         (acc: any) => acc._id === FOUNDER_AUTH_ACCOUNT_ID
     );
 
     const isFounder = founderLinkedAccount?.userId === userId;
-
     return { isFounder, userId };
 }
 

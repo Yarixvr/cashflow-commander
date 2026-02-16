@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { ProfileAvatar } from "./ProfileAvatar";
 import { BadgeDisplay } from "./BadgeDisplay";
 import { AdminBadges } from "./AdminBadges";
+import { FounderInbox } from "./FounderInbox";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useOnboarding } from "../hooks/useOnboarding";
@@ -19,6 +20,8 @@ export function ProfilePage({ onNavigateToDashboard }: ProfilePageProps) {
     const upsertProfile = useMutation(api.profiles.upsertProfile);
     const initializeFounderBadge = useMutation(api.badges.initializeFounderBadge);
     const { resetOnboarding } = useOnboarding();
+
+    // Suggestions inbox moved to FounderInbox component
 
     const [username, setUsername] = useState("");
     const [profilePictureUrl, setProfilePictureUrl] = useState("");
@@ -195,6 +198,9 @@ export function ProfilePage({ onNavigateToDashboard }: ProfilePageProps) {
                     {t('profile.restartTutorial')}
                 </button>
             </div>
+
+            {/* Suggestions Inbox - Only visible to founder */}
+            {isFounder && <FounderInbox />}
 
             {/* Admin Badge Management - Only visible to founder */}
             {isFounder && <AdminBadges />}
